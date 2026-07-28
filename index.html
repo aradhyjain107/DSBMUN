@@ -1173,44 +1173,56 @@ if ('IntersectionObserver' in window){
 }
 
 /* ---------- Countdown ---------- */
-var EVENT_START = new Date('2026-08-01T00:00:00+05:30').getTime();
-var EVENT_END   = new Date('2026-08-03T00:00:00+05:30').getTime();
-function pad(n){ return String(n).padStart(2,'0'); }
-function updateVal(el, val) {
-  var str = pad(val);
-  if (el.textContent !== str) {
-    el.textContent = str;
-    el.classList.remove('cd-pop');
-    void el.offsetWidth;
-    el.classList.add('cd-pop');
-  }
-}
-function tickCountdown(){
-  var now = Date.now();
-  var daysEl=document.getElementById('cd-days'), hrsEl=document.getElementById('cd-hours'),
-      minEl=document.getElementById('cd-mins'), secEl=document.getElementById('cd-secs');
-  if(!daysEl) return;
-  if (now >= EVENT_START && now < EVENT_END){
-    daysEl.textContent='●'; hrsEl.textContent='LIVE'; minEl.textContent='NOW'; secEl.textContent='●';
-    return;
-  }
-  if (now >= EVENT_END){
-    daysEl.textContent='GG'; hrsEl.textContent='WP'; minEl.textContent='';secEl.textContent='';
-    return;
-  }
-  var diff = EVENT_START - now;
-  var d = Math.floor(diff/86400000);
-  var h = Math.floor((diff%86400000)/3600000);
-  var m = Math.floor((diff%3600000)/60000);
-  var s = Math.floor((diff%60000)/1000);
+(function(){
+  var EVENT_START = new Date('2026-08-01T00:00:00+05:30').getTime();
+  var EVENT_END   = new Date('2026-08-03T00:00:00+05:30').getTime();
+  var daysEl = document.getElementById('cd-days');
+  var hrsEl  = document.getElementById('cd-hours');
+  var minEl  = document.getElementById('cd-mins');
+  var secEl  = document.getElementById('cd-secs');
 
-  updateVal(daysEl, d);
-  updateVal(hrsEl, h);
-  updateVal(minEl, m);
-  updateVal(secEl, s);
-}
-tickCountdown();
-setInterval(tickCountdown, 1000);
+  if (!daysEl || !hrsEl || !minEl || !secEl) return;
+
+  function pad(n){ return String(n).padStart(2, '0'); }
+
+  function updateVal(el, val) {
+    var str = pad(val);
+    if (el.textContent !== str) {
+      el.textContent = str;
+      el.classList.remove('cd-pop');
+      requestAnimationFrame(function(){
+        el.classList.add('cd-pop');
+      });
+    }
+  }
+
+  function tickCountdown(){
+    var now = Date.now();
+    if (now >= EVENT_START && now < EVENT_END){
+      daysEl.textContent='●'; hrsEl.textContent='LIVE'; minEl.textContent='NOW'; secEl.textContent='●';
+      return;
+    }
+    if (now >= EVENT_END){
+      daysEl.textContent='GG'; hrsEl.textContent='WP'; minEl.textContent='END'; secEl.textContent='●';
+      return;
+    }
+    var diff = EVENT_START - now;
+    if (diff <= 0) return;
+
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor((diff % 86400000) / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    var s = Math.floor((diff % 60000) / 1000);
+
+    updateVal(daysEl, d);
+    updateVal(hrsEl, h);
+    updateVal(minEl, m);
+    updateVal(secEl, s);
+  }
+
+  tickCountdown();
+  setInterval(tickCountdown, 1000);
+})();
 
 /* ---------- Mobile menu ---------- */
 var menuToggle = document.getElementById('menuToggle');
