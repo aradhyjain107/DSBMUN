@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <circle cx="100" cy="100" r="95" fill="none" stroke="#11317d" stroke-width="4"/>
+  <circle cx="100" cy="100" r="88" fill="#11317d"/>
+  <circle cx="100" cy="100" r="84" fill="none" stroke="#ffffff" stroke-width="1.5"/>
+  
+  <!-- Hands & Dove Icon -->
+  <g fill="#ffffff">
+    <!-- Hands -->
+    <path d="M72 82 C72 82 78 92 90 92 C96 92 100 88 100 88 C100 88 104 92 110 92 C122 92 128 82 128 82 C128 82 122 98 108 98 L92 98 C78 98 72 82 72 82 Z"/>
+    <!-- Dove Body & Wings -->
+    <path d="M100 52 C104 58 112 62 118 62 C114 66 108 68 102 67 C104 72 102 76 98 78 C96 74 97 70 95 67 C92 68 86 66 82 62 C88 62 96 58 100 52 Z"/>
+  </g>
+
+  <!-- Text -->
+  <text x="100" y="132" fill="#ffffff" font-family="'Arial Black', sans-serif" font-weight="900" font-size="16" text-anchor="middle">UNSC</text>
+  <text x="100" y="150" fill="#ffffff" font-family="Arial, sans-serif" font-weight="bold" font-size="13" text-anchor="middle">(8-12)</text>
+</svg>

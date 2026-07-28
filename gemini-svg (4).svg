@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <circle cx="100" cy="100" r="95" fill="none" stroke="#11317d" stroke-width="4"/>
+  <circle cx="100" cy="100" r="88" fill="#11317d"/>
+  <circle cx="100" cy="100" r="84" fill="none" stroke="#ffffff" stroke-width="1.5"/>
+  
+  <!-- UN Emblem / Map Grid + Wreath -->
+  <g fill="none" stroke="#ffffff" stroke-width="2">
+    <circle cx="100" cy="70" r="22"/>
+    <circle cx="100" cy="70" r="14"/>
+    <line x1="100" y1="48" x2="100" y2="92"/>
+    <line x1="78" y1="70" x2="122" y2="70"/>
+    <!-- Olive Wreath Outer Arc Accent -->
+    <path d="M72 80 C68 65 78 50 88 46" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M128 80 C132 65 122 50 112 46" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Text -->
+  <text x="100" y="132" fill="#ffffff" font-family="'Arial Black', sans-serif" font-weight="900" font-size="16" text-anchor="middle">UNGA</text>
+  <text x="100" y="150" fill="#ffffff" font-family="Arial, sans-serif" font-weight="bold" font-size="13" text-anchor="middle">(6-12)</text>
+</svg>

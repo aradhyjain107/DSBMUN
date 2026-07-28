@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <circle cx="100" cy="100" r="95" fill="none" stroke="#11317d" stroke-width="4"/>
+  <circle cx="100" cy="100" r="88" fill="#11317d"/>
+  <circle cx="100" cy="100" r="84" fill="none" stroke="#ffffff" stroke-width="1.5"/>
+  
+  <!-- Emblem / Lion Capital Silhouette Icon -->
+  <g fill="#ffffff">
+    <path d="M82 65 C82 55 90 48 100 48 C110 48 118 55 118 65 C118 75 112 80 108 85 L92 85 C88 80 82 75 82 65 Z"/>
+    <rect x="78" y="86" width="44" height="6" rx="2"/>
+    <path d="M84 92 L116 92 L112 98 L88 98 Z"/>
+  </g>
+
+  <!-- Text -->
+  <text x="100" y="132" fill="#ffffff" font-family="'Arial Black', sans-serif" font-weight="900" font-size="16" text-anchor="middle">AIPPM</text>
+  <text x="100" y="150" fill="#ffffff" font-family="Arial, sans-serif" font-weight="bold" font-size="13" text-anchor="middle">(6-8)</text>
+</svg>
