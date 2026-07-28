@@ -1519,6 +1519,72 @@ window.addEventListener('resize', function(){
     });
   });
 })();
+
+/* 5. AirDrop Decline Button Easter Egg */
+(function(){
+  var declineBtn = document.querySelector('.airdrop__btn--decline');
+  if (!declineBtn) return;
+
+  var messages = [
+    "Wait, are you sure? 🤨",
+    "Think of the Trophies! 🏆",
+    "Declining is illegal! 🚨",
+    "Diplomacy needs you! 🕊️",
+    "Okay fine... Click me! 😈"
+  ];
+  var clickCount = 0;
+
+  declineBtn.addEventListener('mouseenter', function(){
+    if (clickCount < messages.length - 1 && window.matchMedia('(hover: hover)').matches) {
+      declineBtn.textContent = messages[clickCount % messages.length];
+      var rx = (Math.random() - 0.5) * 40;
+      var ry = (Math.random() - 0.5) * 20;
+      declineBtn.style.transform = 'translate(' + rx + 'px, ' + ry + 'px)';
+    }
+  });
+
+  declineBtn.addEventListener('click', function(e){
+    e.preventDefault();
+    clickCount++;
+    declineBtn.textContent = messages[Math.min(clickCount, messages.length - 1)];
+
+    var dialog = document.getElementById('declineEasterEggDialog');
+    if (!dialog) {
+      dialog = document.createElement('dialog');
+      dialog.id = 'declineEasterEggDialog';
+      dialog.style.cssText = 'max-width:440px;width:90%;border:2px solid var(--ink);padding:0;box-shadow:0 10px 30px rgba(0,0,0,0.35);background:var(--paper);border-radius:4px;overflow:hidden;';
+      dialog.innerHTML = '<div class="win" style="border:none;box-shadow:none;">' +
+        '<div class="win__bar"><div class="win__dots"><span class="win__dot win__dot--r"></span><span class="win__dot win__dot--y"></span><span class="win__dot win__dot--g"></span></div><span class="win__title">⚠️ SYSTEM ALERT</span></div>' +
+        '<div class="win__body" style="padding:24px;text-align:center;">' +
+          '<div style="font-size:3rem;margin-bottom:12px;">🚨</div>' +
+          '<h3 style="font-family:var(--font-headline);font-size:1.4rem;color:var(--red);margin-bottom:10px;">DECLINE ATTEMPT BLOCKED!</h3>' +
+          '<p style="font-size:0.95rem;color:var(--ink-soft);margin-bottom:20px;line-height:1.5;">' +
+            'System Error 404: Declining DSBMUN 5.0 is scientifically impossible! Trophies, cash prizes, and diplomatic glory are waiting for you.' +
+          '</p>' +
+          '<div style="display:flex;flex-direction:column;gap:10px;">' +
+            '<button type="button" id="eeAcceptBtn" style="font-family:var(--font-headline);font-weight:800;font-size:1rem;background:var(--red);color:#FFF;border:2px solid var(--ink);padding:12px;cursor:pointer;box-shadow:2px 3px 0 var(--ink);">FINE, I\'LL JOIN DSBMUN! 🎉</button>' +
+            '<button type="button" id="eeEscapeBtn" style="font-family:var(--font-headline);font-weight:700;font-size:0.85rem;background:transparent;color:var(--ink-fade);border:1px solid var(--ink-soft);padding:8px;cursor:pointer;">I still refuse (Escape off-screen) 🏃‍♂️</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+      document.body.appendChild(dialog);
+
+      dialog.querySelector('#eeAcceptBtn').addEventListener('click', function(){
+        dialog.close();
+        window.open('https://www.instagram.com/dsbmun/', '_blank');
+      });
+
+      dialog.querySelector('#eeEscapeBtn').addEventListener('click', function(){
+        dialog.close();
+        declineBtn.style.transition = 'transform 0.8s ease-in, opacity 0.8s ease-in';
+        declineBtn.style.transform = 'translateY(300px) rotate(45deg)';
+        declineBtn.style.opacity = '0';
+        declineBtn.style.pointerEvents = 'none';
+      });
+    }
+    dialog.showModal();
+  });
+})();
 </script>
 </body>
 </html>
