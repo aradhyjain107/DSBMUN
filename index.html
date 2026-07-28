@@ -163,7 +163,7 @@ a.wordmark{cursor:pointer;}
 
 /* ---------- WINDOW CHROME ---------- */
 .win{background:var(--paper);border:2px solid var(--ink);
-  box-shadow:0 4px 0 var(--ink);position:relative;
+  box-shadow:0 4px 0 var(--ink);position:relative;overflow:hidden;box-sizing:border-box;
   transition:box-shadow var(--dur-fast) var(--ease-out-soft), transform var(--dur-fast) var(--ease-out-soft);}
 .win__bar{display:flex;align-items:center;gap:var(--s-2);padding:var(--s-2) var(--s-3);
   background:linear-gradient(180deg,#DDDDDD 0%,#BBBBBB 50%,#C0C0C0 50%,#9A9A9A 100%);
@@ -387,14 +387,16 @@ a.wordmark{cursor:pointer;}
   text-transform:uppercase;opacity:.85;}
 
 /* ---------- DIRECTOR MESSAGES ---------- */
-.messages__stack .win{margin-bottom:0;border-bottom:none;}
-.messages__stack .win:last-child{border-bottom:1px solid var(--ink-soft);}
-.msg{display:grid;grid-template-columns:1fr;gap:var(--s-6);}
-@media(min-width:820px){.msg{grid-template-columns:220px 1fr;}}
-.msg__portrait{background:var(--paper-cool);aspect-ratio:1;display:grid;place-items:center;
-  border:1px solid var(--ink-soft);}
+.messages__stack .win{margin-bottom:var(--s-6);border-bottom:2px solid var(--ink);}
+.msg{display:grid;grid-template-columns:1fr;gap:var(--s-5);box-sizing:border-box;overflow:hidden;}
+@media(min-width:760px){.msg{grid-template-columns:200px 1fr;}}
+.msg__portrait{background:var(--paper-cool);aspect-ratio:4/5;width:100%;max-width:260px;margin-inline:auto;
+  border:2px solid var(--ink);overflow:hidden;position:relative;border-radius:2px;}
+.msg__portrait img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
+.msg__body{min-width:0;word-break:break-word;overflow-wrap:break-word;}
+.msg__body .eyebrow{word-break:break-word;overflow-wrap:break-word;}
 .msg__pull-quote{font-family:var(--font-italic);font-style:italic;color:var(--red);
-  font-size:var(--fs-2xl);line-height:1.3;margin-block:var(--s-4);}
+  font-size:clamp(1.2rem, 4vw, var(--fs-2xl));line-height:1.3;margin-block:var(--s-4);}
 .msg__body p{color:var(--ink-soft);margin-bottom:var(--s-3);}
 .msg__signoff{font-family:var(--font-headline);font-weight:700;margin-top:var(--s-4);}
 
