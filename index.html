@@ -387,16 +387,16 @@ a.wordmark{cursor:pointer;}
   text-transform:uppercase;opacity:.85;}
 
 /* ---------- DIRECTOR MESSAGES ---------- */
-.messages__stack .win{margin-bottom:var(--s-6);border-bottom:2px solid var(--ink);}
-.msg{display:grid;grid-template-columns:1fr;gap:var(--s-5);box-sizing:border-box;overflow:hidden;}
-@media(min-width:760px){.msg{grid-template-columns:200px 1fr;}}
-.msg__portrait{background:var(--paper-cool);aspect-ratio:4/5;width:100%;max-width:260px;margin-inline:auto;
-  border:2px solid var(--ink);overflow:hidden;position:relative;border-radius:2px;}
-.msg__portrait img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
-.msg__body{min-width:0;word-break:break-word;overflow-wrap:break-word;}
-.msg__body .eyebrow{word-break:break-word;overflow-wrap:break-word;}
+.messages__stack .win{margin-bottom:var(--s-6);border-bottom:2px solid var(--ink);overflow:hidden !important;box-sizing:border-box !important;}
+.msg{display:flex;flex-direction:column;gap:var(--s-4);width:100%;box-sizing:border-box;}
+@media(min-width:760px){.msg{display:grid;grid-template-columns:220px 1fr;gap:var(--s-6);align-items:start;}}
+.msg__portrait{background:var(--paper-cool);width:100%;max-width:240px;height:280px;margin-inline:auto;
+  border:2px solid var(--ink);overflow:hidden !important;position:relative;border-radius:2px;flex:none;}
+.msg__portrait img{width:100%;height:100%;max-width:100%;max-height:100%;object-fit:cover;object-position:center top;display:block;}
+.msg__body{width:100%;min-width:0;box-sizing:border-box;overflow:hidden;}
+.msg__body .eyebrow{font-size:clamp(0.75rem,3.2vw,0.9rem);line-height:1.35;word-break:break-word;overflow-wrap:anywhere;white-space:normal;}
 .msg__pull-quote{font-family:var(--font-italic);font-style:italic;color:var(--red);
-  font-size:clamp(1.2rem, 4vw, var(--fs-2xl));line-height:1.3;margin-block:var(--s-4);}
+  font-size:clamp(1.1rem, 3.5vw, var(--fs-2xl));line-height:1.3;margin-block:var(--s-4);}
 .msg__body p{color:var(--ink-soft);margin-bottom:var(--s-3);}
 .msg__signoff{font-family:var(--font-headline);font-weight:700;margin-top:var(--s-4);}
 
@@ -592,7 +592,13 @@ a.wordmark{cursor:pointer;}
   <div class="container">
     <div class="welcome__grid">
       <div class="scroll-reveal">
-        <h2 style="font-size:var(--fs-7xl);color:var(--ink);">where change<br>finds a <span class="accent-italic" style="color:var(--red);font-size:1.05em;">voice</span></h2>
+        <h2 style="font-size:var(--fs-7xl);color:var(--ink);margin-bottom:var(--s-5);">where change<br>finds a <span class="accent-italic" style="color:var(--red);font-size:1.05em;">voice</span></h2>
+        <div class="welcome__copy">
+          <p style="color:var(--ink-soft);margin-bottom:var(--s-4);">We are delighted to announce the Fifth Annual Model United Nations Conference: DSBMUN 5.0, hosted by DSB International Public School on 1st and 2nd August, 2026.</p>
+          <p style="color:var(--ink-soft);margin-bottom:var(--s-4);">Building on the remarkable success of our previous four editions, DSBMUN 5.0 is set to be our most ambitious conference yet. This year's edition brings together passionate young minds to debate pressing global issues and develop essential skills in diplomacy, negotiation, and leadership.</p>
+          <p style="color:var(--ink-soft);margin-bottom:var(--s-4);">Whether you're stepping into a committee for the first time or returning with experience, DSBMUN 5.0 promises an engaging and rewarding journey. Join us as we celebrate diplomacy, foster meaningful conversations, and inspire the leaders of tomorrow.</p>
+          <p style="color:var(--ink-soft);font-weight:700;">We look forward to welcoming you to DSBMUN 5.0 — where ideas are challenged, voices are heard, and leaders are made.</p>
+        </div>
       </div>
       <div class="win win--photobooth welcome__frame scroll-reveal">
         <div class="win__bar"><div class="win__dots"><span class="win__dot win__dot--r"></span><span class="win__dot win__dot--y"></span><span class="win__dot win__dot--g"></span></div><span class="win__title">Photo Booth</span></div>
@@ -622,14 +628,6 @@ a.wordmark{cursor:pointer;}
           <button class="win__effects-btn" id="pbCaptureBtn" type="button">Capture</button>
         </div>
       </div>
-    </div>
-    <div style="max-width:68ch;margin-top:var(--s-8);">
-      <p style="color:var(--ink-soft);margin-bottom:var(--s-4);">We are delighted to announce the Fifth Annual Model United Nations Conference: DSBMUN 5.0, hosted by DSB International Public School on 1st and 2nd August, 2026.</p>
-      <p style="color:var(--ink-soft);margin-bottom:var(--s-4);">Building on the remarkable success of our previous four editions, DSBMUN 5.0 is set to be our most ambitious conference yet. This year's edition will once again bring together passionate young minds from diverse backgrounds, providing a dynamic platform to debate pressing global issues, exchange innovative ideas, and develop essential skills in diplomacy, negotiation, leadership, and public speaking.</p>
-      <p style="color:var(--ink-soft);margin-bottom:var(--s-4);">Over the years, DSBMUN has evolved into far more than a conference — it has become a community where students learn from one another, embrace diverse perspectives, and grow into informed global citizens. Here, every voice is valued, every opinion matters, and every delegate has the opportunity to make a meaningful impact.</p>
-      <p style="color:var(--ink-soft);margin-bottom:var(--s-4);">Whether you're stepping into a committee for the very first time or returning with experience, DSBMUN 5.0 promises an engaging and rewarding journey. Challenge your perspectives, collaborate with delegates from different schools, and experience the excitement of international diplomacy in an environment that encourages confidence, critical thinking, and respectful dialogue.</p>
-      <p style="color:var(--ink-soft);margin-bottom:var(--s-4);">We warmly invite all curious, passionate, and aspiring changemakers to be a part of this unforgettable experience. Join us as we celebrate diplomacy, foster meaningful conversations, and inspire the leaders of tomorrow.</p>
-      <p style="color:var(--ink-soft);font-weight:600;">We look forward to welcoming you to DSBMUN 5.0 — where ideas are challenged, voices are heard, and leaders are made.</p>
     </div>
   </div>
 </section>
