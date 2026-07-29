@@ -1053,7 +1053,7 @@ a.wordmark{cursor:pointer;}
             <div class="finder__file"><div class="finder__file-ic"></div><div class="finder__file-name">AIPPM</div><div class="finder__file-role">Grades 6–8</div></div>
             <div class="finder__file"><div class="finder__file-ic"></div><div class="finder__file-name">UNGA</div><div class="finder__file-role">Grades 6–12</div></div>
             <div class="finder__file"><div class="finder__file-ic"></div><div class="finder__file-name">UNCSW</div><div class="finder__file-role">Grades 9–12</div></div>
-            <div class="finder__file"><div class="finder__file-ic"></div><div class="finder__file-name">IP Press</div><div class="finder__file-role">Grades 8–12</div></div>
+            <div class="finder__file"><div class="finder__file-ic"></div><div class="finder__file-name">IP (Int. Press)</div><div class="finder__file-role">Grades 8–12</div></div>
             <div class="finder__file"><div class="finder__file-ic"></div><div class="finder__file-name">IPL Auction</div><div class="finder__file-role">Grades 6–8</div></div>
             <div class="finder__file"><div class="finder__file-ic"></div><div class="finder__file-name">UNCLOS</div><div class="finder__file-role">Grades 6–8</div></div>
           </div>
@@ -1071,7 +1071,7 @@ a.wordmark{cursor:pointer;}
             <div class="finder__file">
               <div class="finder__file-ic"></div>
               <div class="finder__file-name">Day 2 (2 Aug)</div>
-              <div class="finder__file-role">8:30 AM – 4:00 PM</div>
+              <div class="finder__file-role">8:30 AM – 6:00 PM</div>
               <div class="finder__file-role" style="color:var(--navy);font-weight:600;">Sessions III-V &amp; Closing</div>
             </div>
           </div>
@@ -1317,7 +1317,7 @@ document.querySelectorAll('.btn-burst').forEach(function(btn){
       currentFilterIndex = (currentFilterIndex + 1) % filters.length;
       pbSvg.style.filter = filters[currentFilterIndex].filter;
       var span = pbEffects.querySelector('span');
-      if (span) span.textContent = '✺ ' + filters[currentFilterIndex].name;
+      if (span) span.textContent = '✺ ' + (filters[currentFilterIndex].name === 'Normal' ? 'Effects' : filters[currentFilterIndex].name);
     });
   }
 })();
