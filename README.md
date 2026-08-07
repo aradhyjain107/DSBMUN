@@ -109,19 +109,20 @@ graph TD
 ```
 MUN/
 ├── index.html            # Main SPA entry point (markup, embedded design system, scripts)
-├── PRODUCT.md            # Product specification, feature requirements, user persona guide
-├── DESIGN.md             # Visual DNA specification, design tokens, anti-slop rules
-├── design.md             # Master 16-part architectural & aesthetic contract
-├── CLAUDE.md             # Development protocol, terminology rules, and asset guidelines
-├── CONTRIBUTING.md       # Open-source contribution guidelines & styling conventions
+├── README.md             # Flagship SaaS landing page & project overview
 ├── LICENSE               # MIT License
-├── CHANGELOG.md          # Complete release version history (v1.0.0 -> v5.0.0)
 ├── .env.example          # Template environment variable configuration
-├── favicon.png           # High-resolution website favicon
-├── aradhy.png            # Head of Social Media & Web Lead portrait
-├── ishika.png            # Executive Secretariat leadership portrait
-├── plaksha.png           # Director-General leadership portrait
-└── shiv.png              # Secretary-General leadership portrait
+├── .gitignore            # Workspace git hygiene filter
+├── assets/               # Media & graphical visual primitives
+│   ├── images/           # Leadership portraits (shiv, ishika, plaksha, aradhy) & favicons
+│   └── svgs/             # Vector graphic assets & iconography
+└── docs/                 # Product specifications, design tokens, & guides
+    ├── PRODUCT.md        # Product specification, feature requirements, user personas
+    ├── DESIGN.md         # Visual DNA summary & Impeccable design framework contract
+    ├── design.md         # Master 16-part architectural & aesthetic contract
+    ├── CLAUDE.md         # Development protocols & terminology guidelines
+    ├── CONTRIBUTING.md   # Open-source contribution guide & code standards
+    └── CHANGELOG.md      # Complete release version history (v1.0.0 -> v5.0.0)
 ```
 
 ---

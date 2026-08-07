@@ -1,6 +1,6 @@
 # Design Specification — DSB MUN 5.0
 
-Refer to [design.md](file:///Users/aradhy/Desktop/MUN/design.md) for the complete 16-part design specification.
+Refer to [design.md](design.md) for the complete 16-part design specification.
 
 ## Core Visual DNA & Tokens
 - **Substrate**: Warm paper off-white (`--paper: #F2EBDC`).
