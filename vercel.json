@@ -18,6 +18,26 @@
   ],
   "rewrites": [
     {
+      "source": "/openapi.json",
+      "destination": "/api/openapi"
+    },
+    {
+      "source": "/openapi.yaml",
+      "destination": "/api/openapi"
+    },
+    {
+      "source": "/api/openapi.json",
+      "destination": "/api/openapi"
+    },
+    {
+      "source": "/docs",
+      "destination": "/docs/index.html"
+    },
+    {
+      "source": "/api/docs",
+      "destination": "/docs/index.html"
+    },
+    {
       "source": "/.well-known/mcp",
       "destination": "/api/mcp"
     },
@@ -56,6 +76,10 @@
     {
       "source": "/",
       "destination": "/api/index"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/api/404"
     }
   ]
 }

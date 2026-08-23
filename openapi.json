@@ -1,0 +1,261 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "DSB MUN 5.0 API & Machine Interface",
+    "description": "Official machine API for querying DSB MUN 5.0 Model United Nations conference data, committee agendas, schedule, dress code, and Model Context Protocol (MCP) server endpoints.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "DSB MUN 5.0 Secretariat",
+      "email": "dsbmun@gmail.com",
+      "url": "https://dsbmun.vercel.app/contact"
+    },
+    "license": {
+      "name": "MIT License",
+      "url": "https://dsbmun.vercel.app/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://dsbmun.vercel.app",
+      "description": "Production Server"
+    }
+  ],
+  "paths": {
+    "/api/info": {
+      "get": {
+        "summary": "Get Conference Overview",
+        "description": "Returns core metadata about DSB MUN 5.0 including dates, venue, theme, and host school.",
+        "operationId": "getConferenceInfo",
+        "responses": {
+          "200": {
+            "description": "Successful conference metadata response",
+            "headers": {
+              "X-RateLimit-Limit": { "schema": { "type": "integer" }, "description": "Maximum requests per minute (100)" },
+              "X-RateLimit-Remaining": { "schema": { "type": "integer" }, "description": "Remaining requests in current quota window" }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ConferenceInfo" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/committees": {
+      "get": {
+        "summary": "List All Simulation Committees",
+        "description": "Returns list of all 9 committees with agendas, grade eligibility, and background guide status.",
+        "operationId": "listCommittees",
+        "responses": {
+          "200": {
+            "description": "Array of 9 committees",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Committee" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/schedule": {
+      "get": {
+        "summary": "Get Conference Schedule",
+        "description": "Returns hour-by-hour schedule for Day 1 (1 August 2026) and Day 2 (2 August 2026).",
+        "operationId": "getSchedule",
+        "responses": {
+          "200": {
+            "description": "Daily schedule breakdown",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Schedule" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dress-code": {
+      "get": {
+        "summary": "Get Dress Code Requirements",
+        "description": "Returns official delegate dress code guidelines (Day 1: Indian Traditional, Day 2: Western Formal).",
+        "operationId": "getDressCode",
+        "responses": {
+          "200": {
+            "description": "Dress code requirements",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DressCode" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contacts": {
+      "get": {
+        "summary": "Get Secretariat Contact Details",
+        "description": "Returns official email, Instagram handle, and leadership team contact information.",
+        "operationId": "getContactInfo",
+        "responses": {
+          "200": {
+            "description": "Secretariat contact details",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ContactInfo" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/mcp": {
+      "get": {
+        "summary": "Get MCP Server Manifest",
+        "description": "Returns Model Context Protocol server capabilities, tools list, and version.",
+        "operationId": "getMcpManifest",
+        "responses": {
+          "200": {
+            "description": "MCP Server Manifest",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/McpManifest" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Execute MCP Tool or Handshake",
+        "description": "Handles JSON-RPC 2.0 requests for initialize, tools/list, and tools/call.",
+        "operationId": "callMcpTool",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/McpRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "JSON-RPC 2.0 Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/McpResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid JSON-RPC request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ConferenceInfo": {
+        "type": "object",
+        "required": ["name", "theme", "dates", "location", "committeesCount", "website"],
+        "properties": {
+          "name": { "type": "string", "example": "DSB MUN 5.0" },
+          "theme": { "type": "string", "example": "Evolution for Revolution" },
+          "dates": { "type": "string", "example": "1–2 August 2026" },
+          "location": { "type": "string", "example": "DSB International Public School, Rishikesh, Uttarakhand" },
+          "committeesCount": { "type": "integer", "example": 9 },
+          "website": { "type": "string", "format": "uri", "example": "https://dsbmun.vercel.app/" }
+        }
+      },
+      "Committee": {
+        "type": "object",
+        "required": ["name", "agenda", "eligibility"],
+        "properties": {
+          "name": { "type": "string", "example": "UNHRC" },
+          "agenda": { "type": "string", "example": "Addressing Human Rights Violations in the Middle East..." },
+          "eligibility": { "type": "string", "example": "Grades 6–12" }
+        }
+      },
+      "Schedule": {
+        "type": "object",
+        "required": ["day1", "day2"],
+        "properties": {
+          "day1": { "type": "string", "example": "Day 1 (1 Aug): 8:30 AM Registration, 10:30 AM Session I..." },
+          "day2": { "type": "string", "example": "Day 2 (2 Aug): 8:30 AM Session III, 4:00 PM Closing Ceremony..." }
+        }
+      },
+      "DressCode": {
+        "type": "object",
+        "required": ["day1", "day2", "prohibited"],
+        "properties": {
+          "day1": { "type": "string", "example": "Indian Traditional / Ethnic Attire" },
+          "day2": { "type": "string", "example": "Western Formal Attire" },
+          "prohibited": { "type": "string", "example": "Casual wear (jeans, t-shirts, shorts) is strictly prohibited." }
+        }
+      },
+      "ContactInfo": {
+        "type": "object",
+        "required": ["email", "instagram", "principal", "secretaryGeneral", "directorGeneral", "webLead"],
+        "properties": {
+          "email": { "type": "string", "format": "email", "example": "dsbmun@gmail.com" },
+          "instagram": { "type": "string", "example": "@dsbmun" },
+          "principal": { "type": "string", "example": "Mr. Shiv Sehgal" },
+          "secretaryGeneral": { "type": "string", "example": "Ishika Dhamanda" },
+          "directorGeneral": { "type": "string", "example": "Plaksha" },
+          "webLead": { "type": "string", "example": "Aradhy Jain" }
+        }
+      },
+      "McpManifest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "example": "dsb-mun-5-mcp" },
+          "version": { "type": "string", "example": "1.0.0" },
+          "tools": { "type": "array" }
+        }
+      },
+      "McpRequest": {
+        "type": "object",
+        "required": ["jsonrpc", "method"],
+        "properties": {
+          "jsonrpc": { "type": "string", "example": "2.0" },
+          "method": { "type": "string", "example": "tools/call" },
+          "params": { "type": "object" },
+          "id": { "type": "integer", "example": 1 }
+        }
+      },
+      "McpResponse": {
+        "type": "object",
+        "properties": {
+          "jsonrpc": { "type": "string", "example": "2.0" },
+          "result": { "type": "object" },
+          "error": { "type": "object" }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["code", "message", "statusCode"],
+            "properties": {
+              "code": { "type": "string", "example": "NOT_FOUND" },
+              "message": { "type": "string", "example": "The requested API resource was not found." },
+              "resolutionHint": { "type": "string", "example": "Check /openapi.json or /docs for available endpoints." },
+              "statusCode": { "type": "integer", "example": 404 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Developer API Documentation — DSB MUN 5.0</title>
+<meta name="description" content="Official Developer API Documentation and Machine Specification for DSB MUN 5.0. REST Endpoints, OpenAPI Spec, MCP Server, and cURL integration examples.">
+<link rel="canonical" href="https://dsbmun.vercel.app/docs">
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<style>
+  :root { --paper: #F2EBDC; --navy: #0E2A8A; --ink: #0B0B0F; --red: #C42018; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--paper); color: var(--ink); margin: 0; padding: 2rem 1rem; line-height: 1.6; }
+  .container { max-width: 900px; margin: 0 auto; background: #FFF; padding: 2.5rem; border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--navy); }
+  h1 { font-size: 2.4rem; color: var(--navy); margin-top: 0; border-bottom: 3px solid var(--ink); padding-bottom: 0.5rem; }
+  h2 { font-size: 1.5rem; color: var(--red); margin-top: 2rem; border-bottom: 1px solid #ccc; padding-bottom: 0.3rem; }
+  h3 { font-size: 1.2rem; color: var(--navy); margin-top: 1.2rem; }
+  code, pre { font-family: monospace; background: var(--paper); border: 1px solid var(--ink); padding: 0.2rem 0.4rem; font-size: 0.9rem; }
+  pre { padding: 1rem; overflow-x: auto; white-space: pre-wrap; }
+  a { color: var(--navy); font-weight: bold; }
+  .badge { display: inline-block; background: var(--navy); color: #FFF; padding: 0.2rem 0.6rem; font-size: 0.8rem; font-weight: bold; border-radius: 3px; margin-right: 0.5rem; }
+  .endpoint-card { background: #FAF7F0; border: 2px solid var(--ink); padding: 1.2rem; margin-top: 1rem; }
+  .nav-links { margin-bottom: 2rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="nav-links">
+    <a href="/">← Back to Home</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+    <a href="/openapi.json" target="_blank">OpenAPI Spec (JSON)</a>
+    <a href="/llms.txt">Agent Spec (llms.txt)</a>
+  </div>
+
+  <h1>DSB MUN 5.0 Developer API Documentation</h1>
+  <p>Welcome to the official developer and machine documentation for <strong>DSB MUN 5.0</strong>. This interface provides REST endpoints, OpenAPI 3.1 specifications, Model Context Protocol (MCP) server endpoints, and structured content negotiation for AI agents and developers.</p>
+
+  <h2>Authentication &amp; Rate Limits</h2>
+  <p><strong>Authentication:</strong> All GET endpoints are public and require <em>no API key or authentication</em>.</p>
+  <p><strong>Rate Limits:</strong> Standard rate limits are set to <strong>100 requests per minute</strong>. Headers returned with responses include <code>X-RateLimit-Limit</code> and <code>X-RateLimit-Remaining</code>.</p>
+
+  <h2>Machine Specifications</h2>
+  <ul>
+    <li><strong>OpenAPI 3.1 Spec:</strong> <a href="/openapi.json">https://dsbmun.vercel.app/openapi.json</a></li>
+    <li><strong>Model Context Protocol Manifest:</strong> <a href="/.well-known/mcp.json">https://dsbmun.vercel.app/.well-known/mcp.json</a></li>
+    <li><strong>Agent Instruction Spec:</strong> <a href="/llms.txt">https://dsbmun.vercel.app/llms.txt</a></li>
+    <li><strong>Full Machine Spec:</strong> <a href="/llms-full.txt">https://dsbmun.vercel.app/llms-full.txt</a></li>
+  </ul>
+
+  <h2>REST API Endpoints</h2>
+
+  <div class="endpoint-card">
+    <h3><span class="badge">GET</span> /api/info</h3>
+    <p>Returns general conference overview metadata including dates, theme, venue, and committee count.</p>
+    <pre>curl -s https://dsbmun.vercel.app/api/info</pre>
+  </div>
+
+  <div class="endpoint-card">
+    <h3><span class="badge">GET</span> /api/committees</h3>
+    <p>Returns list of all 9 simulation committees (UNHRC, UNSC, Lok Sabha, AIPPM, UNGA, UNCSW, IP, IPL Auction, UNCLOS) with agendas and grade eligibility.</p>
+    <pre>curl -s https://dsbmun.vercel.app/api/committees</pre>
+  </div>
+
+  <div class="endpoint-card">
+    <h3><span class="badge">GET</span> /api/schedule</h3>
+    <p>Returns hour-by-hour schedule breakdown for Day 1 (1 August 2026) and Day 2 (2 August 2026).</p>
+    <pre>curl -s https://dsbmun.vercel.app/api/schedule</pre>
+  </div>
+
+  <div class="endpoint-card">
+    <h3><span class="badge">GET</span> /api/dress-code</h3>
+    <p>Returns delegate dress code requirements (Day 1: Indian Traditional, Day 2: Western Formal).</p>
+    <pre>curl -s https://dsbmun.vercel.app/api/dress-code</pre>
+  </div>
+
+  <div class="endpoint-card">
+    <h3><span class="badge">GET</span> /api/contacts</h3>
+    <p>Returns Secretariat email, Instagram handle, and host school details.</p>
+    <pre>curl -s https://dsbmun.vercel.app/api/contacts</pre>
+  </div>
+
+  <h2>Model Context Protocol (MCP) Server</h2>
+  <p>For AI assistants like Claude, ChatGPT, and Cursor, DSB MUN 5.0 exposes a native HTTP MCP server at <code>https://dsbmun.vercel.app/api/mcp</code> with tools: <code>get_conference_info</code>, <code>list_committees</code>, <code>get_schedule</code>, <code>get_dress_code</code>, and <code>get_contact_info</code>.</p>
+  <pre>curl -X POST https://dsbmun.vercel.app/api/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"list_committees"},"id":1}'</pre>
+
+  <h2>Content Negotiation (acceptmarkdown.com)</h2>
+  <p>To receive raw Markdown representations of the site, include <code>Accept: text/markdown</code> header in HTTP requests:</p>
+  <pre>curl -H "Accept: text/markdown" https://dsbmun.vercel.app/</pre>
+
+  <h2>JSON Error Schema</h2>
+  <p>All 404 or API errors return structured JSON when requested with <code>Accept: application/json</code> or on <code>/api/*</code> endpoints:</p>
+  <pre>{
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "The requested path '/api/invalid' was not found on DSB MUN 5.0.",
+    "resolutionHint": "Refer to /openapi.json, /docs, or /llms.txt for available API endpoints.",
+    "statusCode": 404
+  }
+}</pre>
+</div>
+</body>
+</html>
