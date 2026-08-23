@@ -33,16 +33,29 @@
           "200": {
             "description": "Successful conference metadata response",
             "headers": {
-              "RateLimit-Limit": { "schema": { "type": "integer" }, "description": "Maximum requests per minute (100)" },
-              "RateLimit-Remaining": { "schema": { "type": "integer" }, "description": "Remaining requests in current quota window" },
-              "RateLimit-Reset": { "schema": { "type": "integer" }, "description": "Seconds until quota resets" },
-              "API-Version": { "schema": { "type": "string" }, "description": "Active API major version (v1)" },
-              "Sunset": { "schema": { "type": "string" }, "description": "RFC 8594 Sunset HTTP header" },
-              "Deprecation": { "schema": { "type": "string" }, "description": "RFC 9261 Deprecation header" }
+              "RateLimit-Limit": { "schema": { "type": "integer" } },
+              "RateLimit-Remaining": { "schema": { "type": "integer" } },
+              "API-Version": { "schema": { "type": "string" } },
+              "Sunset": { "schema": { "type": "string" } },
+              "Deprecation": { "schema": { "type": "string" } }
             },
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/ConferenceInfo" }
+                "schema": {
+                  "type": "object",
+                  "required": ["apiVersion", "name", "theme", "dates", "location", "committeesCount", "website", "documentation", "openApiSpec"],
+                  "properties": {
+                    "apiVersion": { "type": "string", "example": "v1" },
+                    "name": { "type": "string", "example": "DSB MUN 5.0" },
+                    "theme": { "type": "string", "example": "Evolution for Revolution" },
+                    "dates": { "type": "string", "example": "1–2 August 2026" },
+                    "location": { "type": "string", "example": "DSB International Public School, Rishikesh, Uttarakhand" },
+                    "committeesCount": { "type": "integer", "example": 9 },
+                    "website": { "type": "string", "format": "uri", "example": "https://dsbmun.vercel.app/" },
+                    "documentation": { "type": "string", "format": "uri", "example": "https://dsbmun.vercel.app/docs" },
+                    "openApiSpec": { "type": "string", "format": "uri", "example": "https://dsbmun.vercel.app/openapi.json" }
+                  }
+                }
               }
             }
           }
@@ -66,7 +79,15 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/Committee" }
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "agenda", "eligibility"],
+                    "properties": {
+                      "name": { "type": "string", "example": "UNHRC" },
+                      "agenda": { "type": "string", "example": "Addressing Human Rights Violations in the Middle East..." },
+                      "eligibility": { "type": "string", "example": "Grades 6–12" }
+                    }
+                  }
                 }
               }
             }
@@ -89,7 +110,14 @@
             },
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Schedule" }
+                "schema": {
+                  "type": "object",
+                  "required": ["day1", "day2"],
+                  "properties": {
+                    "day1": { "type": "string", "example": "Day 1 (1 Aug): 8:30 AM Registration..." },
+                    "day2": { "type": "string", "example": "Day 2 (2 Aug): 8:30 AM Session III..." }
+                  }
+                }
               }
             }
           }
@@ -111,7 +139,15 @@
             },
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/DressCode" }
+                "schema": {
+                  "type": "object",
+                  "required": ["day1", "day2", "prohibited"],
+                  "properties": {
+                    "day1": { "type": "string", "example": "Indian Traditional / Ethnic Attire" },
+                    "day2": { "type": "string", "example": "Western Formal Attire" },
+                    "prohibited": { "type": "string", "example": "Casual wear is strictly prohibited." }
+                  }
+                }
               }
             }
           }
@@ -133,7 +169,19 @@
             },
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/ContactInfo" }
+                "schema": {
+                  "type": "object",
+                  "required": ["email", "instagram", "principal", "secretaryGeneral", "directorGeneral", "webLead", "venue"],
+                  "properties": {
+                    "email": { "type": "string", "format": "email", "example": "dsbmun@gmail.com" },
+                    "instagram": { "type": "string", "example": "@dsbmun" },
+                    "principal": { "type": "string", "example": "Mr. Shiv Sehgal" },
+                    "secretaryGeneral": { "type": "string", "example": "Ishika Dhamanda" },
+                    "directorGeneral": { "type": "string", "example": "Plaksha" },
+                    "webLead": { "type": "string", "example": "Aradhy Jain" },
+                    "venue": { "type": "string", "example": "DSB International Public School, Rishikesh" }
+                  }
+                }
               }
             }
           }
@@ -150,7 +198,45 @@
             "description": "MCP Server Manifest",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/McpManifest" }
+                "schema": {
+                  "type": "object",
+                  "required": ["name", "title", "description", "version", "protocolVersion", "transport", "capabilities", "tools"],
+                  "properties": {
+                    "name": { "type": "string", "example": "dsb-mun-5-mcp" },
+                    "title": { "type": "string", "example": "DSB MUN 5.0 Model Context Protocol Server" },
+                    "description": { "type": "string", "example": "Exposes DSB MUN 5.0 conference data as tools" },
+                    "version": { "type": "string", "example": "1.0.0" },
+                    "protocolVersion": { "type": "string", "example": "2024-11-05" },
+                    "transport": {
+                      "type": "object",
+                      "required": ["type", "endpoint"],
+                      "properties": {
+                        "type": { "type": "string", "example": "http" },
+                        "endpoint": { "type": "string", "format": "uri", "example": "https://dsbmun.vercel.app/api/mcp" }
+                      }
+                    },
+                    "capabilities": {
+                      "type": "object",
+                      "required": ["tools", "resources"],
+                      "properties": {
+                        "tools": { "type": "object" },
+                        "resources": { "type": "object" }
+                      }
+                    },
+                    "tools": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["name", "description", "inputSchema"],
+                        "properties": {
+                          "name": { "type": "string", "example": "list_committees" },
+                          "description": { "type": "string", "example": "Lists all 9 committees" },
+                          "inputSchema": { "type": "object" }
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -164,7 +250,22 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/McpRequest" }
+              "schema": {
+                "type": "object",
+                "required": ["jsonrpc", "method"],
+                "properties": {
+                  "jsonrpc": { "type": "string", "example": "2.0" },
+                  "method": { "type": "string", "example": "tools/call" },
+                  "params": {
+                    "type": "object",
+                    "properties": {
+                      "name": { "type": "string", "example": "list_committees" },
+                      "arguments": { "type": "object" }
+                    }
+                  },
+                  "id": { "type": "integer", "example": 1 }
+                }
+              }
             }
           }
         },
@@ -173,167 +274,31 @@
             "description": "JSON-RPC 2.0 Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/McpResponse" }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid JSON-RPC request",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "ConferenceInfo": {
-        "type": "object",
-        "required": ["apiVersion", "name", "theme", "dates", "location", "committeesCount", "website", "documentation", "openApiSpec"],
-        "properties": {
-          "apiVersion": { "type": "string", "example": "v1" },
-          "name": { "type": "string", "example": "DSB MUN 5.0" },
-          "theme": { "type": "string", "example": "Evolution for Revolution" },
-          "dates": { "type": "string", "example": "1–2 August 2026" },
-          "location": { "type": "string", "example": "DSB International Public School, Rishikesh, Uttarakhand" },
-          "committeesCount": { "type": "integer", "example": 9 },
-          "website": { "type": "string", "format": "uri", "example": "https://dsbmun.vercel.app/" },
-          "documentation": { "type": "string", "format": "uri", "example": "https://dsbmun.vercel.app/docs" },
-          "openApiSpec": { "type": "string", "format": "uri", "example": "https://dsbmun.vercel.app/openapi.json" }
-        }
-      },
-      "Committee": {
-        "type": "object",
-        "required": ["name", "agenda", "eligibility"],
-        "properties": {
-          "name": { "type": "string", "example": "UNHRC" },
-          "agenda": { "type": "string", "example": "Addressing Human Rights Violations in the Middle East..." },
-          "eligibility": { "type": "string", "example": "Grades 6–12" }
-        }
-      },
-      "Schedule": {
-        "type": "object",
-        "required": ["day1", "day2"],
-        "properties": {
-          "day1": { "type": "string", "example": "Day 1 (1 Aug): 8:30 AM Registration, 10:30 AM Session I..." },
-          "day2": { "type": "string", "example": "Day 2 (2 Aug): 8:30 AM Session III, 4:00 PM Closing Ceremony..." }
-        }
-      },
-      "DressCode": {
-        "type": "object",
-        "required": ["day1", "day2", "prohibited"],
-        "properties": {
-          "day1": { "type": "string", "example": "Indian Traditional / Ethnic Attire" },
-          "day2": { "type": "string", "example": "Western Formal Attire" },
-          "prohibited": { "type": "string", "example": "Casual wear (jeans, t-shirts, shorts) is strictly prohibited." }
-        }
-      },
-      "ContactInfo": {
-        "type": "object",
-        "required": ["email", "instagram", "principal", "secretaryGeneral", "directorGeneral", "webLead", "venue"],
-        "properties": {
-          "email": { "type": "string", "format": "email", "example": "dsbmun@gmail.com" },
-          "instagram": { "type": "string", "example": "@dsbmun" },
-          "principal": { "type": "string", "example": "Mr. Shiv Sehgal" },
-          "secretaryGeneral": { "type": "string", "example": "Ishika Dhamanda" },
-          "directorGeneral": { "type": "string", "example": "Plaksha" },
-          "webLead": { "type": "string", "example": "Aradhy Jain" },
-          "venue": { "type": "string", "example": "DSB International Public School, Rishikesh" }
-        }
-      },
-      "McpManifest": {
-        "type": "object",
-        "required": ["name", "title", "description", "version", "transport", "capabilities", "tools"],
-        "properties": {
-          "name": { "type": "string", "example": "dsb-mun-5-mcp" },
-          "title": { "type": "string", "example": "DSB MUN 5.0 Model Context Protocol Server" },
-          "description": { "type": "string", "example": "Exposes DSB MUN 5.0 conference data as tools" },
-          "version": { "type": "string", "example": "1.0.0" },
-          "transport": {
-            "type": "object",
-            "required": ["type", "endpoint"],
-            "properties": {
-              "type": { "type": "string", "example": "http" },
-              "endpoint": { "type": "string", "format": "uri", "example": "https://dsbmun.vercel.app/api/mcp" }
-            }
-          },
-          "capabilities": {
-            "type": "object",
-            "required": ["tools", "resources"],
-            "properties": {
-              "tools": { "type": "boolean", "example": true },
-              "resources": { "type": "boolean", "example": true }
-            }
-          },
-          "tools": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "required": ["name", "description"],
-              "properties": {
-                "name": { "type": "string", "example": "list_committees" },
-                "description": { "type": "string", "example": "Lists all 9 committees" }
-              }
-            }
-          }
-        }
-      },
-      "McpRequest": {
-        "type": "object",
-        "required": ["jsonrpc", "method"],
-        "properties": {
-          "jsonrpc": { "type": "string", "example": "2.0" },
-          "method": { "type": "string", "example": "tools/call" },
-          "params": {
-            "type": "object",
-            "properties": {
-              "name": { "type": "string", "example": "list_committees" },
-              "arguments": { "type": "object" }
-            }
-          },
-          "id": { "type": "integer", "example": 1 }
-        }
-      },
-      "McpResponse": {
-        "type": "object",
-        "required": ["jsonrpc", "result"],
-        "properties": {
-          "jsonrpc": { "type": "string", "example": "2.0" },
-          "result": {
-            "type": "object",
-            "properties": {
-              "content": {
-                "type": "array",
-                "items": {
+                "schema": {
                   "type": "object",
-                  "required": ["type", "text"],
+                  "required": ["jsonrpc", "result"],
                   "properties": {
-                    "type": { "type": "string", "example": "text" },
-                    "text": { "type": "string", "example": "[\"UNHRC\", \"UNSC\"]" }
+                    "jsonrpc": { "type": "string", "example": "2.0" },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "content": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": ["type", "text"],
+                            "properties": {
+                              "type": { "type": "string", "example": "text" },
+                              "text": { "type": "string", "example": "[\"UNHRC\", \"UNSC\"]" }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "error": { "type": "object" }
                   }
                 }
               }
-            }
-          },
-          "error": { "type": "object" }
-        }
-      },
-      "ErrorResponse": {
-        "type": "object",
-        "required": ["error"],
-        "properties": {
-          "error": {
-            "type": "object",
-            "required": ["code", "message", "statusCode"],
-            "properties": {
-              "code": { "type": "string", "example": "NOT_FOUND" },
-              "message": { "type": "string", "example": "The requested API resource was not found." },
-              "resolutionHint": { "type": "string", "example": "Check /openapi.json or /docs for available endpoints." },
-              "statusCode": { "type": "integer", "example": 404 }
             }
           }
         }
