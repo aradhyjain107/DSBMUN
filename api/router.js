@@ -2,11 +2,14 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = (req, res) => {
-  const queryRoute = (req.query && req.query.route) ? String(req.query.route).toLowerCase() : '';
-  const rawUrl = String(req.url || '').toLowerCase();
-  const xForwarded = String(req.headers['x-forwarded-uri'] || req.headers['x-matched-path'] || req.headers['x-vercel-matched-path'] || '').toLowerCase();
-  const fullCheck = `${rawUrl} ${xForwarded} ${queryRoute}`;
+  const reqUrl = String(req.url || '');
+  const parsedFromReq = new URL(reqUrl, 'https://dsbmun.vercel.app');
+  const routeParam = ((req.query && req.query.route) ? String(req.query.route) : (parsedFromReq.searchParams.get('route') || '')).toLowerCase();
   const acceptHeader = String(req.headers['accept'] || '').toLowerCase();
+  const rawPath = parsedFromReq.pathname.toLowerCase();
+  const xForwardedUri = String(req.headers['x-forwarded-uri'] || '').toLowerCase();
+  const xMatchedPath = String(req.headers['x-matched-path'] || '').toLowerCase();
+  const effectivePath = (xForwardedUri || rawPath).toLowerCase();
 
   // Standard CORS, RateLimit, Versioning, Sunset, and Deprecation headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -29,7 +32,7 @@ module.exports = (req, res) => {
   }
 
   // 1. REST API Endpoints (Support /v1/ and /api/)
-  if (fullCheck.includes('info')) {
+  if (routeParam === 'info' || effectivePath === '/v1/info' || effectivePath === '/api/info') {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     return res.status(200).json({
       apiVersion: "v1",
@@ -44,7 +47,7 @@ module.exports = (req, res) => {
     });
   }
 
-  if (fullCheck.includes('committees')) {
+  if (routeParam === 'committees' || effectivePath === '/v1/committees' || effectivePath === '/api/committees') {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     return res.status(200).json([
       { name: "UNHRC", agenda: "Addressing Human Rights Violations and Civilian Protection in the Middle East Amid Escalating Regional Conflicts", eligibility: "Grades 6–12" },
@@ -59,7 +62,7 @@ module.exports = (req, res) => {
     ]);
   }
 
-  if (fullCheck.includes('schedule')) {
+  if (routeParam === 'schedule' || effectivePath === '/v1/schedule' || effectivePath === '/api/schedule') {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     return res.status(200).json({
       day1: "Day 1 (1 Aug): 8:30 AM Registration & Kit Distribution, 9:00 AM Opening Ceremony, 10:30 AM Session I, 1:15 PM Lunch, 2:30 PM Session II, 5:00 PM Socials & Day 1 Departure",
@@ -67,7 +70,7 @@ module.exports = (req, res) => {
     });
   }
 
-  if (fullCheck.includes('dress-code')) {
+  if (routeParam === 'dress-code' || effectivePath === '/v1/dress-code' || effectivePath === '/api/dress-code') {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     return res.status(200).json({
       day1: "Indian Traditional / Ethnic Attire (Kurtas, Sarees, Anarkalis, Ethnic Suits with formal footwear).",
@@ -76,7 +79,7 @@ module.exports = (req, res) => {
     });
   }
 
-  if (fullCheck.includes('contacts')) {
+  if (routeParam === 'contacts' || effectivePath === '/v1/contacts' || effectivePath === '/api/contacts') {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     return res.status(200).json({
       email: "dsbmun@gmail.com",
@@ -90,7 +93,7 @@ module.exports = (req, res) => {
   }
 
   // 2. OpenAPI Specification
-  if (fullCheck.includes('openapi')) {
+  if (routeParam === 'openapi' || effectivePath === '/openapi.json' || effectivePath === '/v1/openapi.json' || effectivePath === '/api/openapi.json' || effectivePath === '/openapi.yaml') {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     try {
       const spec = fs.readFileSync(path.join(process.cwd(), 'openapi.json'), 'utf8');
@@ -101,7 +104,7 @@ module.exports = (req, res) => {
   }
 
   // 3. MCP Server Manifest & Live Protocol Handshake
-  if (fullCheck.includes('mcp')) {
+  if (routeParam === 'mcp' || effectivePath === '/.well-known/mcp' || effectivePath === '/.well-known/mcp.json' || effectivePath === '/api/mcp' || effectivePath === '/v1/mcp') {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
 
     const manifest = {
@@ -160,33 +163,39 @@ module.exports = (req, res) => {
   }
 
   // 4. Machine Readable Specs & Sitemaps
-  if (fullCheck.includes('llms-full')) {
+  if (routeParam === 'llms-full' || effectivePath === '/llms-full.txt') {
     res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
     const content = fs.readFileSync(path.join(process.cwd(), 'llms-full.txt'), 'utf8');
     return res.status(200).send(content);
   }
 
-  if (fullCheck.includes('llms')) {
+  if (routeParam === 'llms' || effectivePath === '/llms.txt') {
     res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
     const content = fs.readFileSync(path.join(process.cwd(), 'llms.txt'), 'utf8');
     return res.status(200).send(content);
   }
 
-  if (fullCheck.includes('sitemap')) {
+  if (routeParam === 'sitemap' || effectivePath === '/sitemap.xml') {
     res.setHeader('Content-Type', 'application/xml; charset=utf-8');
     const content = fs.readFileSync(path.join(process.cwd(), 'sitemap.xml'), 'utf8');
     return res.status(200).send(content);
   }
 
-  if (fullCheck.includes('robots')) {
+  if (routeParam === 'robots' || effectivePath === '/robots.txt') {
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     const content = fs.readFileSync(path.join(process.cwd(), 'robots.txt'), 'utf8');
     return res.status(200).send(content);
   }
 
   // 5. Content Negotiation for Root / and Home
-  if (queryRoute === 'home' || queryRoute === 'markdown' || fullCheck.includes('route=home') || fullCheck.includes('route=markdown') || rawUrl === '/' || rawUrl === '') {
-    if (acceptHeader.includes('text/markdown') || queryRoute === 'markdown' || fullCheck.includes('route=markdown')) {
+  if (routeParam === 'markdown' || (effectivePath === '/' && acceptHeader.includes('text/markdown'))) {
+    res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+    const md = fs.readFileSync(path.join(process.cwd(), 'llms.txt'), 'utf8');
+    return res.status(200).send(md);
+  }
+
+  if (routeParam === 'home' || effectivePath === '/' || effectivePath === '/home.html') {
+    if (acceptHeader.includes('text/markdown')) {
       res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
       const md = fs.readFileSync(path.join(process.cwd(), 'llms.txt'), 'utf8');
       return res.status(200).send(md);
@@ -196,7 +205,7 @@ module.exports = (req, res) => {
     return res.status(200).send(html);
   }
 
-  // 6. Dynamic Agent-Friendly 404 Fallback (Guaranteed HTTP 404 for all nonexistent paths)
+  // 6. Dynamic Agent-Friendly 404 Fallback (Strict HTTP 404 for all nonexistent paths)
   if (acceptHeader.includes('text/markdown')) {
     res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
     return res.status(404).send('# 404 Not Found\n\nThe requested resource does not exist on https://dsbmun.vercel.app/.\n\n## Available Sitemap Links\n- [Homepage](https://dsbmun.vercel.app/)\n- [API Docs](https://dsbmun.vercel.app/docs)\n- [OpenAPI Spec](https://dsbmun.vercel.app/openapi.json)\n- [Agent Instructions](https://dsbmun.vercel.app/llms.txt)\n- [XML Sitemap](https://dsbmun.vercel.app/sitemap.xml)\n');
