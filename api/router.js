@@ -8,13 +8,15 @@ module.exports = (req, res) => {
   const routeParam = (parsedUrl.searchParams.get('route') || '').toLowerCase();
   const acceptHeader = (req.headers['accept'] || '').toLowerCase();
 
-  // Set standard CORS, RateLimit, and Versioning headers on all responses
+  // Standard CORS, RateLimit, Versioning, Sunset, and Deprecation headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, API-Version');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Vary', 'Accept, Accept-Encoding');
   res.setHeader('API-Version', 'v1');
   res.setHeader('Deprecation', 'false');
+  res.setHeader('Sunset', 'Wed, 01 Aug 2029 00:00:00 GMT');
+  res.setHeader('Link', '<https://dsbmun.vercel.app/docs#deprecation>; rel="deprecation"');
   res.setHeader('RateLimit-Limit', '100');
   res.setHeader('RateLimit-Remaining', '99');
   res.setHeader('RateLimit-Reset', '60');
@@ -182,15 +184,15 @@ module.exports = (req, res) => {
   }
 
   // 5. Root Homepage Content Negotiation (Markdown vs HTML)
-  if (pathname === '/' || pathname === '/index.html' || routeParam === 'markdown' || routeParam === 'index') {
+  if (pathname === '/' || pathname === '/index.html' || pathname === '/home.html' || routeParam === 'markdown' || routeParam === 'index') {
     if (routeParam === 'markdown' || acceptHeader.includes('text/markdown') || acceptHeader.includes('text/x-markdown')) {
       res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
       const llmsFull = fs.readFileSync(path.join(process.cwd(), 'llms-full.txt'), 'utf8');
       return res.status(200).send(llmsFull);
     }
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    const indexHtml = fs.readFileSync(path.join(process.cwd(), 'index.html'), 'utf8');
-    return res.status(200).send(indexHtml);
+    const homeHtml = fs.readFileSync(path.join(process.cwd(), 'home.html'), 'utf8');
+    return res.status(200).send(homeHtml);
   }
 
   // 6. Catch-All 404 Handler

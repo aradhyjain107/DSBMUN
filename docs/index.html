@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Developer API Documentation — DSB MUN 5.0</title>
-<meta name="description" content="Official Developer API Documentation and Machine Specification for DSB MUN 5.0. REST Endpoints, OpenAPI Spec, MCP Server, and cURL integration examples.">
+<title>Developer API Documentation — DSB MUN 5.0 Vercel Developer Resources</title>
+<meta name="description" content="Official Developer API Documentation, OpenAPI 3.1 Spec, Vercel Serverless Functions, Model Context Protocol (MCP) Server, and Deprecation Policy for DSB MUN 5.0.">
 <link rel="canonical" href="https://dsbmun.vercel.app/docs">
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <style>
@@ -28,20 +28,29 @@
     <a href="/">← Back to Home</a>
     <a href="/about">About</a>
     <a href="/contact">Contact</a>
-    <a href="/openapi.json" target="_blank">OpenAPI Spec (JSON)</a>
+    <a href="/v1/openapi.json" target="_blank">OpenAPI 3.1 Spec (JSON)</a>
     <a href="/llms.txt">Agent Spec (llms.txt)</a>
   </div>
 
-  <h1>DSB MUN 5.0 Developer API Documentation</h1>
-  <p>Welcome to the official developer and machine documentation for <strong>DSB MUN 5.0</strong>. This interface provides REST endpoints, OpenAPI 3.1 specifications, Model Context Protocol (MCP) server endpoints, and structured content negotiation for AI agents and developers.</p>
+  <h1>DSB MUN 5.0 Vercel Developer API Documentation</h1>
+  <p>Welcome to the official developer and machine documentation for <strong>DSB MUN 5.0</strong>. This interface provides REST endpoints, OpenAPI 3.1 specifications, Model Context Protocol (MCP) server endpoints, Vercel serverless integration, and structured content negotiation for AI agents.</p>
 
-  <h2>Authentication &amp; Rate Limits</h2>
+  <h2>Authentication, Rate Limits &amp; Versioning</h2>
   <p><strong>Authentication:</strong> All GET endpoints are public and require <em>no API key or authentication</em>.</p>
-  <p><strong>Rate Limits:</strong> Standard rate limits are set to <strong>100 requests per minute</strong>. Headers returned with responses include <code>X-RateLimit-Limit</code> and <code>X-RateLimit-Remaining</code>.</p>
+  <p><strong>API Versioning:</strong> All endpoints are versioned under the <code>/v1/</code> path (e.g. <code>https://dsbmun.vercel.app/v1/info</code>). Unversioned aliases (<code>/api/*</code>) point to the current active major version (v1).</p>
+  <p><strong>Rate Limits:</strong> Standard rate limits are set to <strong>100 requests per minute</strong>. Headers returned with responses include <code>RateLimit-Limit</code>, <code>RateLimit-Remaining</code>, <code>RateLimit-Reset</code>, <code>X-RateLimit-Limit</code>, <code>X-RateLimit-Remaining</code>, and <code>X-RateLimit-Reset</code>.</p>
 
-  <h2>Machine Specifications</h2>
+  <h2 id="deprecation">API Deprecation &amp; Sunset Policy</h2>
+  <p>DSB MUN 5.0 follows <strong>Semantic Versioning 2.0.0</strong> for all machine interfaces:</p>
   <ul>
-    <li><strong>OpenAPI 3.1 Spec:</strong> <a href="/openapi.json">https://dsbmun.vercel.app/openapi.json</a></li>
+    <li><strong>Deprecation Signaling:</strong> Deprecated APIs return standard HTTP response headers: <code>Deprecation: true</code>, <code>Sunset: &lt;date&gt;</code> (per RFC 8594), and a <code>Link: &lt;url&gt;; rel="deprecation"</code> header.</li>
+    <li><strong>Deprecation Timeline:</strong> Any major version deprecation is announced at least <strong>90 days in advance</strong> before sunsetting.</li>
+    <li><strong>Current Active Version:</strong> <code>v1</code> (Active, <code>Deprecation: false</code>).</li>
+  </ul>
+
+  <h2>Machine Specifications &amp; Vercel Resources</h2>
+  <ul>
+    <li><strong>OpenAPI 3.1 Spec:</strong> <a href="/v1/openapi.json">https://dsbmun.vercel.app/v1/openapi.json</a></li>
     <li><strong>Model Context Protocol Manifest:</strong> <a href="/.well-known/mcp.json">https://dsbmun.vercel.app/.well-known/mcp.json</a></li>
     <li><strong>Agent Instruction Spec:</strong> <a href="/llms.txt">https://dsbmun.vercel.app/llms.txt</a></li>
     <li><strong>Full Machine Spec:</strong> <a href="/llms-full.txt">https://dsbmun.vercel.app/llms-full.txt</a></li>
@@ -50,33 +59,33 @@
   <h2>REST API Endpoints</h2>
 
   <div class="endpoint-card">
-    <h3><span class="badge">GET</span> /api/info</h3>
+    <h3><span class="badge">GET</span> /v1/info</h3>
     <p>Returns general conference overview metadata including dates, theme, venue, and committee count.</p>
-    <pre>curl -s https://dsbmun.vercel.app/api/info</pre>
+    <pre>curl -s https://dsbmun.vercel.app/v1/info</pre>
   </div>
 
   <div class="endpoint-card">
-    <h3><span class="badge">GET</span> /api/committees</h3>
+    <h3><span class="badge">GET</span> /v1/committees</h3>
     <p>Returns list of all 9 simulation committees (UNHRC, UNSC, Lok Sabha, AIPPM, UNGA, UNCSW, IP, IPL Auction, UNCLOS) with agendas and grade eligibility.</p>
-    <pre>curl -s https://dsbmun.vercel.app/api/committees</pre>
+    <pre>curl -s https://dsbmun.vercel.app/v1/committees</pre>
   </div>
 
   <div class="endpoint-card">
-    <h3><span class="badge">GET</span> /api/schedule</h3>
+    <h3><span class="badge">GET</span> /v1/schedule</h3>
     <p>Returns hour-by-hour schedule breakdown for Day 1 (1 August 2026) and Day 2 (2 August 2026).</p>
-    <pre>curl -s https://dsbmun.vercel.app/api/schedule</pre>
+    <pre>curl -s https://dsbmun.vercel.app/v1/schedule</pre>
   </div>
 
   <div class="endpoint-card">
-    <h3><span class="badge">GET</span> /api/dress-code</h3>
+    <h3><span class="badge">GET</span> /v1/dress-code</h3>
     <p>Returns delegate dress code requirements (Day 1: Indian Traditional, Day 2: Western Formal).</p>
-    <pre>curl -s https://dsbmun.vercel.app/api/dress-code</pre>
+    <pre>curl -s https://dsbmun.vercel.app/v1/dress-code</pre>
   </div>
 
   <div class="endpoint-card">
-    <h3><span class="badge">GET</span> /api/contacts</h3>
+    <h3><span class="badge">GET</span> /v1/contacts</h3>
     <p>Returns Secretariat email, Instagram handle, and host school details.</p>
-    <pre>curl -s https://dsbmun.vercel.app/api/contacts</pre>
+    <pre>curl -s https://dsbmun.vercel.app/v1/contacts</pre>
   </div>
 
   <h2>Model Context Protocol (MCP) Server</h2>
@@ -88,17 +97,6 @@
   <h2>Content Negotiation (acceptmarkdown.com)</h2>
   <p>To receive raw Markdown representations of the site, include <code>Accept: text/markdown</code> header in HTTP requests:</p>
   <pre>curl -H "Accept: text/markdown" https://dsbmun.vercel.app/</pre>
-
-  <h2>JSON Error Schema</h2>
-  <p>All 404 or API errors return structured JSON when requested with <code>Accept: application/json</code> or on <code>/api/*</code> endpoints:</p>
-  <pre>{
-  "error": {
-    "code": "NOT_FOUND",
-    "message": "The requested path '/api/invalid' was not found on DSB MUN 5.0.",
-    "resolutionHint": "Refer to /openapi.json, /docs, or /llms.txt for available API endpoints.",
-    "statusCode": 404
-  }
-}</pre>
 </div>
 </body>
 </html>
