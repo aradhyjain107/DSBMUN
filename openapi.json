@@ -29,12 +29,14 @@
         "summary": "Get Conference Overview",
         "description": "Returns core metadata about DSB MUN 5.0 including dates, venue, theme, and host school.",
         "operationId": "getConferenceInfoV1",
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Successful conference metadata response",
             "headers": {
               "RateLimit-Limit": { "schema": { "type": "integer" } },
               "RateLimit-Remaining": { "schema": { "type": "integer" } },
+              "RateLimit-Reset": { "schema": { "type": "integer" } },
               "API-Version": { "schema": { "type": "string" } },
               "Sunset": { "schema": { "type": "string" } },
               "Deprecation": { "schema": { "type": "string" } }
@@ -58,6 +60,27 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorModel" } },
+              "application/problem+json": { "schema": { "$ref": "#/components/schemas/ProblemDetails" } }
+            }
+          },
+          "429": {
+            "description": "Rate Limit Exceeded",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorModel" } },
+              "application/problem+json": { "schema": { "$ref": "#/components/schemas/ProblemDetails" } }
+            }
+          },
+          "default": {
+            "description": "Error Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorModel" } },
+              "application/problem+json": { "schema": { "$ref": "#/components/schemas/ProblemDetails" } }
+            }
           }
         }
       }
@@ -67,6 +90,7 @@
         "summary": "List All Simulation Committees",
         "description": "Returns list of all 9 committees with agendas, grade eligibility, and background guide status.",
         "operationId": "listCommitteesV1",
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Array of 9 committees",
@@ -91,6 +115,20 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorModel" } },
+              "application/problem+json": { "schema": { "$ref": "#/components/schemas/ProblemDetails" } }
+            }
+          },
+          "default": {
+            "description": "Error Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorModel" } },
+              "application/problem+json": { "schema": { "$ref": "#/components/schemas/ProblemDetails" } }
+            }
           }
         }
       }
@@ -100,6 +138,7 @@
         "summary": "Get Conference Schedule",
         "description": "Returns hour-by-hour schedule for Day 1 (1 August 2026) and Day 2 (2 August 2026).",
         "operationId": "getScheduleV1",
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Daily schedule breakdown",
@@ -120,6 +159,13 @@
                 }
               }
             }
+          },
+          "default": {
+            "description": "Error Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorModel" } },
+              "application/problem+json": { "schema": { "$ref": "#/components/schemas/ProblemDetails" } }
+            }
           }
         }
       }
@@ -129,6 +175,7 @@
         "summary": "Get Dress Code Requirements",
         "description": "Returns official delegate dress code guidelines (Day 1: Indian Traditional, Day 2: Western Formal).",
         "operationId": "getDressCodeV1",
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Dress code requirements",
@@ -150,6 +197,13 @@
                 }
               }
             }
+          },
+          "default": {
+            "description": "Error Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorModel" } },
+              "application/problem+json": { "schema": { "$ref": "#/components/schemas/ProblemDetails" } }
+            }
           }
         }
       }
@@ -159,6 +213,7 @@
         "summary": "Get Secretariat Contact Details",
         "description": "Returns official email, Instagram handle, and leadership team contact information.",
         "operationId": "getContactInfoV1",
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Secretariat contact details",
@@ -184,6 +239,13 @@
                 }
               }
             }
+          },
+          "default": {
+            "description": "Error Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorModel" } },
+              "application/problem+json": { "schema": { "$ref": "#/components/schemas/ProblemDetails" } }
+            }
           }
         }
       }
@@ -193,6 +255,7 @@
         "summary": "Get MCP Server Manifest",
         "description": "Returns Model Context Protocol server capabilities, tools list, and version.",
         "operationId": "getMcpManifestV1",
+        "parameters": [],
         "responses": {
           "200": {
             "description": "MCP Server Manifest",
@@ -238,6 +301,13 @@
                   }
                 }
               }
+            }
+          },
+          "default": {
+            "description": "Error Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorModel" } },
+              "application/problem+json": { "schema": { "$ref": "#/components/schemas/ProblemDetails" } }
             }
           }
         }
@@ -300,7 +370,46 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Invalid JSON-RPC request",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorModel" } },
+              "application/problem+json": { "schema": { "$ref": "#/components/schemas/ProblemDetails" } }
+            }
+          },
+          "default": {
+            "description": "Error Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorModel" } },
+              "application/problem+json": { "schema": { "$ref": "#/components/schemas/ProblemDetails" } }
+            }
           }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ErrorModel": {
+        "type": "object",
+        "required": ["code", "message", "statusCode"],
+        "properties": {
+          "code": { "type": "string", "example": "NOT_FOUND" },
+          "message": { "type": "string", "example": "The requested resource was not found." },
+          "resolutionHint": { "type": "string", "example": "Check /v1/openapi.json or /docs for available endpoints." },
+          "statusCode": { "type": "integer", "example": 404 }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "required": ["type", "title", "status", "detail"],
+        "properties": {
+          "type": { "type": "string", "format": "uri", "example": "https://dsbmun.vercel.app/docs#errors" },
+          "title": { "type": "string", "example": "Resource Not Found" },
+          "status": { "type": "integer", "example": 404 },
+          "detail": { "type": "string", "example": "The requested endpoint does not exist." },
+          "instance": { "type": "string", "format": "uri", "example": "/v1/invalid" }
         }
       }
     }
