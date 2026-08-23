@@ -19,15 +19,15 @@
   "rewrites": [
     {
       "source": "/openapi.json",
-      "destination": "/api/openapi"
+      "destination": "/api/router"
     },
     {
       "source": "/openapi.yaml",
-      "destination": "/api/openapi"
+      "destination": "/api/router"
     },
     {
       "source": "/api/openapi.json",
-      "destination": "/api/openapi"
+      "destination": "/api/router"
     },
     {
       "source": "/docs",
@@ -39,27 +39,27 @@
     },
     {
       "source": "/.well-known/mcp",
-      "destination": "/api/mcp"
+      "destination": "/api/router"
     },
     {
       "source": "/.well-known/mcp.json",
-      "destination": "/api/mcp"
+      "destination": "/api/router"
     },
     {
       "source": "/llms.txt",
-      "destination": "/api/llms"
+      "destination": "/api/router"
     },
     {
       "source": "/llms-full.txt",
-      "destination": "/api/llms-full"
+      "destination": "/api/router"
     },
     {
       "source": "/sitemap.xml",
-      "destination": "/api/sitemap"
+      "destination": "/api/router"
     },
     {
       "source": "/robots.txt",
-      "destination": "/api/robots"
+      "destination": "/api/router"
     },
     {
       "source": "/about",
@@ -74,12 +74,16 @@
       "destination": "/privacy.html"
     },
     {
+      "source": "/api/:endpoint*",
+      "destination": "/api/router"
+    },
+    {
       "source": "/",
-      "destination": "/api/index"
+      "destination": "/api/router"
     },
     {
       "source": "/(.*)",
-      "destination": "/api/404"
+      "destination": "/api/router"
     }
   ]
 }

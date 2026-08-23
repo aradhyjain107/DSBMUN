@@ -1,0 +1,213 @@
+const fs = require('fs');
+const path = require('path');
+
+module.exports = (req, res) => {
+  const url = req.url || '';
+  const parsedUrl = new URL(url, `https://${req.headers.host || 'dsbmun.vercel.app'}`);
+  const pathname = parsedUrl.pathname.toLowerCase();
+  const acceptHeader = (req.headers['accept'] || '').toLowerCase();
+  
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Vary', 'Accept, Accept-Encoding');
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  // 1. REST API Endpoints
+  if (pathname === '/api/info') {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('X-RateLimit-Limit', '100');
+    res.setHeader('X-RateLimit-Remaining', '99');
+    return res.status(200).json({
+      name: "DSB MUN 5.0",
+      theme: "Evolution for Revolution",
+      dates: "1–2 August 2026",
+      location: "DSB International Public School, Gumaniwala, Rishikesh, Uttarakhand 249204, India",
+      committeesCount: 9,
+      website: "https://dsbmun.vercel.app/"
+    });
+  }
+
+  if (pathname === '/api/committees') {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('X-RateLimit-Limit', '100');
+    res.setHeader('X-RateLimit-Remaining', '99');
+    return res.status(200).json([
+      { name: "UNHRC", agenda: "Addressing Human Rights Violations and Civilian Protection in the Middle East Amid Escalating Regional Conflicts", eligibility: "Grades 6–12" },
+      { name: "UNSC", agenda: "Addressing the Security Consequences of the Collapse of the Soviet Union, with Special Emphasis on Nuclear Proliferation and International Stability", eligibility: "Grades 8–12" },
+      { name: "Lok Sabha", agenda: "Deliberation on Protecting India's Secular Framework Amidst Rising Communal Tensions and Political Polarisation", eligibility: "Grades 8–12" },
+      { name: "AIPPM", agenda: "Deliberation on Tackling Corruption and Improving Government Transparency", eligibility: "Grades 8–12" },
+      { name: "UNGA", agenda: "Weaponising Peace: Examining the Use of Security Narratives, Counterterrorism, and Arms Control as Instruments of Global Power", eligibility: "Grades 8–12" },
+      { name: "UNCSW", agenda: "Negotiating Trans Inclusion, Biological Essentialism, and Gender Autonomy within Contemporary Feminist Movements", eligibility: "Grades 8–12" },
+      { name: "IP", agenda: "Covering committee proceedings through journalism, photography, and political caricature", eligibility: "Grades 8–12" },
+      { name: "IPL Auction", agenda: "Mega Auction and Deliberation on the Increasing Prominence of League Cricket", eligibility: "Open to all" },
+      { name: "UNCLOS", agenda: "Addressing Maritime Disputes and Ensuring Sustainable Use of Ocean Resources", eligibility: "Open to all" }
+    ]);
+  }
+
+  if (pathname === '/api/schedule') {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    return res.status(200).json({
+      day1: "Day 1 (1 Aug): 8:30 AM Registration & Kit Distribution, 9:00 AM Opening Ceremony, 10:30 AM Session I, 1:15 PM Lunch, 2:30 PM Session II, 5:00 PM Socials & Day 1 Departure",
+      day2: "Day 2 (2 Aug): 8:30 AM Session III, 11:00 AM Session IV, 1:00 PM Lunch, 2:15 PM Session V, 4:00 PM Closing Ceremony & Awards Distribution"
+    });
+  }
+
+  if (pathname === '/api/dress-code') {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    return res.status(200).json({
+      day1: "Indian Traditional / Ethnic Attire (Kurtas, Sarees, Anarkalis, Ethnic Suits with formal footwear).",
+      day2: "Western Formal Attire (Suits, Blazers, Formal Shirts, Trousers, Formal Dresses with ties & dress shoes).",
+      prohibited: "Casual wear (jeans, t-shirts, hoodies, sneakers, shorts) is strictly prohibited in committee rooms."
+    });
+  }
+
+  if (pathname === '/api/contacts') {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    return res.status(200).json({
+      email: "dsbmun@gmail.com",
+      instagram: "@dsbmun",
+      principal: "Mr. Shiv Sehgal",
+      secretaryGeneral: "Ishika Dhamanda",
+      directorGeneral: "Plaksha",
+      webLead: "Aradhy Jain",
+      venue: "DSB International Public School, Gumaniwala, Rishikesh, Uttarakhand 249204, India"
+    });
+  }
+
+  // 2. OpenAPI Specification
+  if (pathname === '/openapi.json' || pathname === '/api/openapi.json' || pathname === '/openapi.yaml') {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    try {
+      const spec = fs.readFileSync(path.join(process.cwd(), 'openapi.json'), 'utf8');
+      return res.status(200).send(spec);
+    } catch (e) {
+      return res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to load openapi.json", statusCode: 500 } });
+    }
+  }
+
+  // 3. MCP Server Manifest & Tool Call API
+  if (pathname === '/.well-known/mcp' || pathname === '/.well-known/mcp.json' || pathname === '/api/mcp') {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+
+    const manifest = {
+      name: "dsb-mun-5-mcp",
+      title: "DSB MUN 5.0 Model Context Protocol Server",
+      description: "Exposes DSB MUN 5.0 conference data, committee agendas, schedule, and delegate rules as tools for AI agents.",
+      version: "1.0.0",
+      transport: { type: "http", endpoint: "https://dsbmun.vercel.app/api/mcp" },
+      capabilities: { tools: true, resources: true },
+      tools: [
+        { name: "get_conference_info", description: "Returns basic details about DSB MUN 5.0" },
+        { name: "list_committees", description: "Lists all 9 committees with agendas and eligibility" },
+        { name: "get_schedule", description: "Returns hour-by-hour schedule for Day 1 and Day 2" },
+        { name: "get_dress_code", description: "Returns delegate dress code protocol" },
+        { name: "get_contact_info", description: "Returns Secretariat and leadership contacts" }
+      ]
+    };
+
+    if (req.method === 'GET') {
+      return res.status(200).json(manifest);
+    }
+
+    if (req.method === 'POST') {
+      const body = req.body || {};
+      const method = body.method;
+      const params = body.params || {};
+
+      if (method === 'initialize') {
+        return res.status(200).json({
+          jsonrpc: "2.0",
+          id: body.id || 1,
+          result: { protocolVersion: "2024-11-05", capabilities: manifest.capabilities, serverInfo: { name: manifest.name, version: manifest.version } }
+        });
+      }
+
+      if (method === 'tools/list') {
+        return res.status(200).json({ jsonrpc: "2.0", id: body.id || 1, result: { tools: manifest.tools } });
+      }
+
+      if (method === 'tools/call') {
+        const toolName = params.name;
+        let data = null;
+        if (toolName === 'get_conference_info') data = { name: "DSB MUN 5.0", theme: "Evolution for Revolution", dates: "1–2 August 2026", location: "Rishikesh, India" };
+        else if (toolName === 'list_committees') data = ["UNHRC", "UNSC", "Lok Sabha", "AIPPM", "UNGA", "UNCSW", "IP", "IPL Auction", "UNCLOS"];
+        else if (toolName === 'get_schedule') data = { day1: "1 Aug: Sessions I & II", day2: "2 Aug: Sessions III, IV, V & Closing" };
+        else if (toolName === 'get_dress_code') data = { day1: "Indian Traditional", day2: "Western Formal" };
+        else if (toolName === 'get_contact_info') data = { email: "dsbmun@gmail.com", instagram: "@dsbmun" };
+
+        if (data) {
+          return res.status(200).json({ jsonrpc: "2.0", id: body.id || 1, result: { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] } });
+        }
+      }
+      return res.status(200).json(manifest);
+    }
+  }
+
+  // 4. Machine Readable Specs & Sitemaps
+  if (pathname === '/llms.txt') {
+    res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+    const content = fs.readFileSync(path.join(process.cwd(), 'llms.txt'), 'utf8');
+    return res.status(200).send(content);
+  }
+
+  if (pathname === '/llms-full.txt') {
+    res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+    const content = fs.readFileSync(path.join(process.cwd(), 'llms-full.txt'), 'utf8');
+    return res.status(200).send(content);
+  }
+
+  if (pathname === '/sitemap.xml') {
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+    const content = fs.readFileSync(path.join(process.cwd(), 'sitemap.xml'), 'utf8');
+    return res.status(200).send(content);
+  }
+
+  if (pathname === '/robots.txt') {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    const content = fs.readFileSync(path.join(process.cwd(), 'robots.txt'), 'utf8');
+    return res.status(200).send(content);
+  }
+
+  // 5. Root Homepage Content Negotiation
+  if (pathname === '/' || pathname === '/index.html') {
+    if (acceptHeader.includes('text/markdown') || acceptHeader.includes('text/x-markdown')) {
+      res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+      const llmsFull = fs.readFileSync(path.join(process.cwd(), 'llms-full.txt'), 'utf8');
+      return res.status(200).send(llmsFull);
+    }
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    const indexHtml = fs.readFileSync(path.join(process.cwd(), 'index.html'), 'utf8');
+    return res.status(200).send(indexHtml);
+  }
+
+  // 6. Catch-All 404 Handler
+  if (acceptHeader.includes('application/json') || pathname.startsWith('/api/')) {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    return res.status(404).json({
+      error: {
+        code: "NOT_FOUND",
+        message: `The requested resource '${pathname}' was not found on DSB MUN 5.0.`,
+        resolutionHint: "Refer to /openapi.json, /docs, or /llms.txt for available API endpoints.",
+        statusCode: 404
+      }
+    });
+  }
+
+  if (acceptHeader.includes('text/markdown') || acceptHeader.includes('text/x-markdown')) {
+    res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+    return res.status(404).send(`# 404 Not Found — DSB MUN 5.0\n\nThe requested path \`${pathname}\` does not exist.\n\n- Sitemap: https://dsbmun.vercel.app/sitemap.xml\n- OpenAPI: https://dsbmun.vercel.app/openapi.json\n- LLMs: https://dsbmun.vercel.app/llms.txt\n`);
+  }
+
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  let html404;
+  try {
+    html404 = fs.readFileSync(path.join(process.cwd(), '404.html'), 'utf8');
+  } catch (e) {
+    html404 = '<h1>404 Not Found</h1><p>Visit <a href="/">https://dsbmun.vercel.app/</a></p>';
+  }
+  return res.status(404).send(html404);
+};
