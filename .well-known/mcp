@@ -1,0 +1,63 @@
+{
+  "name": "dsb-mun-5-mcp",
+  "title": "DSB MUN 5.0 Model Context Protocol Server",
+  "description": "Exposes DSB MUN 5.0 conference data, committee agendas, schedule, and delegate rules as tools for AI agents.",
+  "version": "1.0.0",
+  "protocolVersion": "2024-11-05",
+  "transport": {
+    "type": "http",
+    "endpoint": "https://dsbmun.vercel.app/api/mcp"
+  },
+  "capabilities": {
+    "tools": {},
+    "resources": {},
+    "prompts": {}
+  },
+  "tools": [
+    {
+      "name": "get_conference_info",
+      "description": "Returns basic details about DSB MUN 5.0 including theme, dates, and venue.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "list_committees",
+      "description": "Lists all 9 committees with agendas, grade eligibility, and background guide status.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "get_schedule",
+      "description": "Returns hour-by-hour schedule for Day 1 and Day 2 of DSB MUN 5.0.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "get_dress_code",
+      "description": "Returns official delegate dress code protocol (Day 1: Indian Traditional, Day 2: Western Formal).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "get_contact_info",
+      "description": "Returns Secretariat and leadership contact information.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    }
+  ]
+}
