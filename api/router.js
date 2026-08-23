@@ -2,13 +2,13 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = (req, res) => {
-  const reqUrl = String(req.url || '');
+  const reqUrl = String(req.url || '').toLowerCase();
   const parsedFromReq = new URL(reqUrl, 'https://dsbmun.vercel.app');
   const routeParam = ((req.query && req.query.route) ? String(req.query.route) : (parsedFromReq.searchParams.get('route') || '')).toLowerCase();
   const acceptHeader = String(req.headers['accept'] || '').toLowerCase();
-  const rawPath = parsedFromReq.pathname.toLowerCase();
   const xForwardedUri = String(req.headers['x-forwarded-uri'] || '').toLowerCase();
-  const effectivePath = (xForwardedUri || rawPath).toLowerCase();
+  const rawPath = parsedFromReq.pathname.toLowerCase();
+  const combined = `${reqUrl} ${rawPath} ${xForwardedUri} ${routeParam}`;
 
   // Standard CORS, RateLimit, Versioning, Sunset, and Deprecation headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -30,80 +30,8 @@ module.exports = (req, res) => {
     return res.status(200).end();
   }
 
-  // 1. REST API Endpoints (Support /v1/ and /api/)
-  if (routeParam === 'info' || effectivePath === '/v1/info' || effectivePath === '/api/info') {
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    return res.status(200).json({
-      apiVersion: "v1",
-      name: "DSB MUN 5.0",
-      theme: "Evolution for Revolution",
-      dates: "1–2 August 2026",
-      location: "DSB International Public School, Gumaniwala, Rishikesh, Uttarakhand 249204, India",
-      committeesCount: 9,
-      website: "https://dsbmun.vercel.app/",
-      documentation: "https://dsbmun.vercel.app/docs",
-      openApiSpec: "https://dsbmun.vercel.app/openapi.json"
-    });
-  }
-
-  if (routeParam === 'committees' || effectivePath === '/v1/committees' || effectivePath === '/api/committees') {
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    return res.status(200).json([
-      { name: "UNHRC", agenda: "Addressing Human Rights Violations and Civilian Protection in the Middle East Amid Escalating Regional Conflicts", eligibility: "Grades 6–12" },
-      { name: "UNSC", agenda: "Addressing the Security Consequences of the Collapse of the Soviet Union, with Special Emphasis on Nuclear Proliferation and International Stability", eligibility: "Grades 8–12" },
-      { name: "Lok Sabha", agenda: "Deliberation on Protecting India's Secular Framework Amidst Rising Communal Tensions and Political Polarisation", eligibility: "Grades 8–12" },
-      { name: "AIPPM", agenda: "Deliberation on Tackling Corruption and Improving Government Transparency", eligibility: "Grades 8–12" },
-      { name: "UNGA", agenda: "Weaponising Peace: Examining the Use of Security Narratives, Counterterrorism, and Arms Control as Instruments of Global Power", eligibility: "Grades 8–12" },
-      { name: "UNCSW", agenda: "Negotiating Trans Inclusion, Biological Essentialism, and Gender Autonomy within Contemporary Feminist Movements", eligibility: "Grades 8–12" },
-      { name: "IP", agenda: "Covering committee proceedings through journalism, photography, and political caricature", eligibility: "Grades 8–12" },
-      { name: "IPL Auction", agenda: "Mega Auction and Deliberation on the Increasing Prominence of League Cricket", eligibility: "Open to all" },
-      { name: "UNCLOS", agenda: "Addressing Maritime Disputes and Ensuring Sustainable Use of Ocean Resources", eligibility: "Open to all" }
-    ]);
-  }
-
-  if (routeParam === 'schedule' || effectivePath === '/v1/schedule' || effectivePath === '/api/schedule') {
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    return res.status(200).json({
-      day1: "Day 1 (1 Aug): 8:30 AM Registration & Kit Distribution, 9:00 AM Opening Ceremony, 10:30 AM Session I, 1:15 PM Lunch, 2:30 PM Session II, 5:00 PM Socials & Day 1 Departure",
-      day2: "Day 2 (2 Aug): 8:30 AM Session III, 11:00 AM Session IV, 1:00 PM Lunch, 2:15 PM Session V, 4:00 PM Closing Ceremony & Awards Distribution"
-    });
-  }
-
-  if (routeParam === 'dress-code' || effectivePath === '/v1/dress-code' || effectivePath === '/api/dress-code') {
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    return res.status(200).json({
-      day1: "Indian Traditional / Ethnic Attire (Kurtas, Sarees, Anarkalis, Ethnic Suits with formal footwear).",
-      day2: "Western Formal Attire (Suits, Blazers, Formal Shirts, Trousers, Formal Dresses with ties & dress shoes).",
-      prohibited: "Casual wear (jeans, t-shirts, hoodies, sneakers, shorts) is strictly prohibited in committee rooms."
-    });
-  }
-
-  if (routeParam === 'contacts' || effectivePath === '/v1/contacts' || effectivePath === '/api/contacts') {
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    return res.status(200).json({
-      email: "dsbmun@gmail.com",
-      instagram: "@dsbmun",
-      principal: "Mr. Shiv Sehgal",
-      secretaryGeneral: "Ishika Dhamanda",
-      directorGeneral: "Plaksha",
-      webLead: "Aradhy Jain",
-      venue: "DSB International Public School, Gumaniwala, Rishikesh, Uttarakhand 249204, India"
-    });
-  }
-
-  // 2. OpenAPI Specification
-  if (routeParam === 'openapi' || effectivePath === '/openapi.json' || effectivePath === '/v1/openapi.json' || effectivePath === '/api/openapi.json' || effectivePath === '/openapi.yaml') {
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    try {
-      const spec = fs.readFileSync(path.join(process.cwd(), 'openapi.json'), 'utf8');
-      return res.status(200).send(spec);
-    } catch (e) {
-      return res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to load openapi.json", statusCode: 500 } });
-    }
-  }
-
-  // 3. MCP Server Manifest & Complete JSON-RPC 2.0 Live Protocol Handshake
-  if (routeParam === 'mcp' || effectivePath === '/.well-known/mcp' || effectivePath === '/.well-known/mcp.json' || effectivePath === '/api/mcp' || effectivePath === '/v1/mcp') {
+  // 1. MCP Server Manifest & Complete JSON-RPC 2.0 Live Protocol Handshake
+  if (routeParam === 'mcp' || combined.includes('mcp')) {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
 
     const manifest = {
@@ -179,40 +107,106 @@ module.exports = (req, res) => {
     }
   }
 
+  // 2. REST API Endpoints (Support /v1/ and /api/)
+  if (routeParam === 'info' || combined.includes('info')) {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    return res.status(200).json({
+      apiVersion: "v1",
+      name: "DSB MUN 5.0",
+      theme: "Evolution for Revolution",
+      dates: "1–2 August 2026",
+      location: "DSB International Public School, Gumaniwala, Rishikesh, Uttarakhand 249204, India",
+      committeesCount: 9,
+      website: "https://dsbmun.vercel.app/",
+      documentation: "https://dsbmun.vercel.app/docs",
+      openApiSpec: "https://dsbmun.vercel.app/openapi.json"
+    });
+  }
+
+  if (routeParam === 'committees' || combined.includes('committees')) {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    return res.status(200).json([
+      { name: "UNHRC", agenda: "Addressing Human Rights Violations and Civilian Protection in the Middle East Amid Escalating Regional Conflicts", eligibility: "Grades 6–12" },
+      { name: "UNSC", agenda: "Addressing the Security Consequences of the Collapse of the Soviet Union, with Special Emphasis on Nuclear Proliferation and International Stability", eligibility: "Grades 8–12" },
+      { name: "Lok Sabha", agenda: "Deliberation on Protecting India's Secular Framework Amidst Rising Communal Tensions and Political Polarisation", eligibility: "Grades 8–12" },
+      { name: "AIPPM", agenda: "Deliberation on Tackling Corruption and Improving Government Transparency", eligibility: "Grades 8–12" },
+      { name: "UNGA", agenda: "Weaponising Peace: Examining the Use of Security Narratives, Counterterrorism, and Arms Control as Instruments of Global Power", eligibility: "Grades 8–12" },
+      { name: "UNCSW", agenda: "Negotiating Trans Inclusion, Biological Essentialism, and Gender Autonomy within Contemporary Feminist Movements", eligibility: "Grades 8–12" },
+      { name: "IP", agenda: "Covering committee proceedings through journalism, photography, and political caricature", eligibility: "Grades 8–12" },
+      { name: "IPL Auction", agenda: "Mega Auction and Deliberation on the Increasing Prominence of League Cricket", eligibility: "Open to all" },
+      { name: "UNCLOS", agenda: "Addressing Maritime Disputes and Ensuring Sustainable Use of Ocean Resources", eligibility: "Open to all" }
+    ]);
+  }
+
+  if (routeParam === 'schedule' || combined.includes('schedule')) {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    return res.status(200).json({
+      day1: "Day 1 (1 Aug): 8:30 AM Registration & Kit Distribution, 9:00 AM Opening Ceremony, 10:30 AM Session I, 1:15 PM Lunch, 2:30 PM Session II, 5:00 PM Socials & Day 1 Departure",
+      day2: "Day 2 (2 Aug): 8:30 AM Session III, 11:00 AM Session IV, 1:00 PM Lunch, 2:15 PM Session V, 4:00 PM Closing Ceremony & Awards Distribution"
+    });
+  }
+
+  if (routeParam === 'dress-code' || combined.includes('dress-code')) {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    return res.status(200).json({
+      day1: "Indian Traditional / Ethnic Attire (Kurtas, Sarees, Anarkalis, Ethnic Suits with formal footwear).",
+      day2: "Western Formal Attire (Suits, Blazers, Formal Shirts, Trousers, Formal Dresses with ties & dress shoes).",
+      prohibited: "Casual wear (jeans, t-shirts, hoodies, sneakers, shorts) is strictly prohibited in committee rooms."
+    });
+  }
+
+  if (routeParam === 'contacts' || combined.includes('contacts')) {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    return res.status(200).json({
+      email: "dsbmun@gmail.com",
+      instagram: "@dsbmun",
+      principal: "Mr. Shiv Sehgal",
+      secretaryGeneral: "Ishika Dhamanda",
+      directorGeneral: "Plaksha",
+      webLead: "Aradhy Jain",
+      venue: "DSB International Public School, Gumaniwala, Rishikesh, Uttarakhand 249204, India"
+    });
+  }
+
+  // 3. OpenAPI Specification
+  if (routeParam === 'openapi' || combined.includes('openapi')) {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    try {
+      const spec = fs.readFileSync(path.join(process.cwd(), 'openapi.json'), 'utf8');
+      return res.status(200).send(spec);
+    } catch (e) {
+      return res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to load openapi.json", statusCode: 500 } });
+    }
+  }
+
   // 4. Machine Readable Specs & Sitemaps
-  if (routeParam === 'llms-full' || effectivePath === '/llms-full.txt') {
+  if (routeParam === 'llms-full' || combined.includes('llms-full')) {
     res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
     const content = fs.readFileSync(path.join(process.cwd(), 'llms-full.txt'), 'utf8');
     return res.status(200).send(content);
   }
 
-  if (routeParam === 'llms' || effectivePath === '/llms.txt') {
+  if (routeParam === 'llms' || combined.includes('llms')) {
     res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
     const content = fs.readFileSync(path.join(process.cwd(), 'llms.txt'), 'utf8');
     return res.status(200).send(content);
   }
 
-  if (routeParam === 'sitemap' || effectivePath === '/sitemap.xml') {
+  if (routeParam === 'sitemap' || combined.includes('sitemap')) {
     res.setHeader('Content-Type', 'application/xml; charset=utf-8');
     const content = fs.readFileSync(path.join(process.cwd(), 'sitemap.xml'), 'utf8');
     return res.status(200).send(content);
   }
 
-  if (routeParam === 'robots' || effectivePath === '/robots.txt') {
+  if (routeParam === 'robots' || combined.includes('robots')) {
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     const content = fs.readFileSync(path.join(process.cwd(), 'robots.txt'), 'utf8');
     return res.status(200).send(content);
   }
 
   // 5. Content Negotiation for Root / and Home
-  if (routeParam === 'markdown' || (effectivePath === '/' && acceptHeader.includes('text/markdown'))) {
-    res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
-    const md = fs.readFileSync(path.join(process.cwd(), 'llms.txt'), 'utf8');
-    return res.status(200).send(md);
-  }
-
-  if (routeParam === 'home' || effectivePath === '/' || effectivePath === '/home.html') {
-    if (acceptHeader.includes('text/markdown')) {
+  if (routeParam === 'home' || routeParam === 'markdown' || rawPath === '/' || rawPath === '' || rawPath === '/home.html') {
+    if (acceptHeader.includes('text/markdown') || routeParam === 'markdown') {
       res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
       const md = fs.readFileSync(path.join(process.cwd(), 'llms.txt'), 'utf8');
       return res.status(200).send(md);
@@ -223,7 +217,7 @@ module.exports = (req, res) => {
   }
 
   // 6. Dynamic Error Responses (Structured JSON for APIs / Agents; HTML for Browsers)
-  const isApiRequest = effectivePath.startsWith('/api/') || effectivePath.startsWith('/v1/') || acceptHeader.includes('application/json') || acceptHeader.includes('application/problem+json');
+  const isApiRequest = rawPath.startsWith('/api/') || rawPath.startsWith('/v1/') || acceptHeader.includes('application/json') || acceptHeader.includes('application/problem+json');
   
   if (isApiRequest) {
     res.setHeader('Content-Type', 'application/problem+json; charset=utf-8');
@@ -231,7 +225,7 @@ module.exports = (req, res) => {
       type: "https://dsbmun.vercel.app/docs#errors",
       title: "Resource Not Found",
       status: 404,
-      detail: `The requested endpoint '${effectivePath}' does not exist on https://dsbmun.vercel.app.`,
+      detail: `The requested endpoint '${rawPath}' does not exist on https://dsbmun.vercel.app.`,
       code: "NOT_FOUND",
       message: "The requested API endpoint was not found.",
       resolutionHint: "Check https://dsbmun.vercel.app/v1/openapi.json or https://dsbmun.vercel.app/docs for available endpoints."
