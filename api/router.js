@@ -5,36 +5,45 @@ module.exports = (req, res) => {
   const url = req.headers['x-forwarded-uri'] || req.headers['x-matched-path'] || req.url || '';
   const parsedUrl = new URL(url, `https://${req.headers.host || 'dsbmun.vercel.app'}`);
   const pathname = parsedUrl.pathname.toLowerCase();
+  const routeParam = (parsedUrl.searchParams.get('route') || '').toLowerCase();
   const acceptHeader = (req.headers['accept'] || '').toLowerCase();
-  
+
+  // Set standard CORS, RateLimit, and Versioning headers on all responses
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, API-Version');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Vary', 'Accept, Accept-Encoding');
-  
+  res.setHeader('API-Version', 'v1');
+  res.setHeader('Deprecation', 'false');
+  res.setHeader('RateLimit-Limit', '100');
+  res.setHeader('RateLimit-Remaining', '99');
+  res.setHeader('RateLimit-Reset', '60');
+  res.setHeader('X-RateLimit-Limit', '100');
+  res.setHeader('X-RateLimit-Remaining', '99');
+  res.setHeader('X-RateLimit-Reset', '60');
+
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  // 1. REST API Endpoints
-  if (pathname === '/api/info') {
+  // 1. REST API Endpoints (Support /v1/ and /api/)
+  if (pathname === '/api/info' || pathname === '/v1/info' || routeParam === 'info') {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    res.setHeader('X-RateLimit-Limit', '100');
-    res.setHeader('X-RateLimit-Remaining', '99');
     return res.status(200).json({
+      apiVersion: "v1",
       name: "DSB MUN 5.0",
       theme: "Evolution for Revolution",
       dates: "1–2 August 2026",
       location: "DSB International Public School, Gumaniwala, Rishikesh, Uttarakhand 249204, India",
       committeesCount: 9,
-      website: "https://dsbmun.vercel.app/"
+      website: "https://dsbmun.vercel.app/",
+      documentation: "https://dsbmun.vercel.app/docs",
+      openApiSpec: "https://dsbmun.vercel.app/openapi.json"
     });
   }
 
-  if (pathname === '/api/committees') {
+  if (pathname === '/api/committees' || pathname === '/v1/committees' || routeParam === 'committees') {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    res.setHeader('X-RateLimit-Limit', '100');
-    res.setHeader('X-RateLimit-Remaining', '99');
     return res.status(200).json([
       { name: "UNHRC", agenda: "Addressing Human Rights Violations and Civilian Protection in the Middle East Amid Escalating Regional Conflicts", eligibility: "Grades 6–12" },
       { name: "UNSC", agenda: "Addressing the Security Consequences of the Collapse of the Soviet Union, with Special Emphasis on Nuclear Proliferation and International Stability", eligibility: "Grades 8–12" },
@@ -48,7 +57,7 @@ module.exports = (req, res) => {
     ]);
   }
 
-  if (pathname === '/api/schedule') {
+  if (pathname === '/api/schedule' || pathname === '/v1/schedule' || routeParam === 'schedule') {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     return res.status(200).json({
       day1: "Day 1 (1 Aug): 8:30 AM Registration & Kit Distribution, 9:00 AM Opening Ceremony, 10:30 AM Session I, 1:15 PM Lunch, 2:30 PM Session II, 5:00 PM Socials & Day 1 Departure",
@@ -56,7 +65,7 @@ module.exports = (req, res) => {
     });
   }
 
-  if (pathname === '/api/dress-code') {
+  if (pathname === '/api/dress-code' || pathname === '/v1/dress-code' || routeParam === 'dress-code') {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     return res.status(200).json({
       day1: "Indian Traditional / Ethnic Attire (Kurtas, Sarees, Anarkalis, Ethnic Suits with formal footwear).",
@@ -65,7 +74,7 @@ module.exports = (req, res) => {
     });
   }
 
-  if (pathname === '/api/contacts') {
+  if (pathname === '/api/contacts' || pathname === '/v1/contacts' || routeParam === 'contacts') {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     return res.status(200).json({
       email: "dsbmun@gmail.com",
@@ -79,7 +88,7 @@ module.exports = (req, res) => {
   }
 
   // 2. OpenAPI Specification
-  if (pathname === '/openapi.json' || pathname === '/api/openapi.json' || pathname === '/openapi.yaml') {
+  if (pathname === '/openapi.json' || pathname === '/v1/openapi.json' || pathname === '/api/openapi.json' || pathname === '/openapi.yaml' || routeParam === 'openapi') {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     try {
       const spec = fs.readFileSync(path.join(process.cwd(), 'openapi.json'), 'utf8');
@@ -90,7 +99,7 @@ module.exports = (req, res) => {
   }
 
   // 3. MCP Server Manifest & Tool Call API
-  if (pathname === '/.well-known/mcp' || pathname === '/.well-known/mcp.json' || pathname === '/api/mcp') {
+  if (pathname === '/.well-known/mcp' || pathname === '/.well-known/mcp.json' || pathname === '/api/mcp' || pathname === '/v1/mcp' || routeParam === 'mcp') {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
 
     const manifest = {
@@ -148,33 +157,33 @@ module.exports = (req, res) => {
   }
 
   // 4. Machine Readable Specs & Sitemaps
-  if (pathname === '/llms.txt') {
+  if (pathname === '/llms.txt' || routeParam === 'llms') {
     res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
     const content = fs.readFileSync(path.join(process.cwd(), 'llms.txt'), 'utf8');
     return res.status(200).send(content);
   }
 
-  if (pathname === '/llms-full.txt') {
+  if (pathname === '/llms-full.txt' || routeParam === 'llms-full') {
     res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
     const content = fs.readFileSync(path.join(process.cwd(), 'llms-full.txt'), 'utf8');
     return res.status(200).send(content);
   }
 
-  if (pathname === '/sitemap.xml') {
+  if (pathname === '/sitemap.xml' || routeParam === 'sitemap') {
     res.setHeader('Content-Type', 'application/xml; charset=utf-8');
     const content = fs.readFileSync(path.join(process.cwd(), 'sitemap.xml'), 'utf8');
     return res.status(200).send(content);
   }
 
-  if (pathname === '/robots.txt') {
+  if (pathname === '/robots.txt' || routeParam === 'robots') {
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     const content = fs.readFileSync(path.join(process.cwd(), 'robots.txt'), 'utf8');
     return res.status(200).send(content);
   }
 
-  // 5. Root Homepage Content Negotiation
-  if (pathname === '/' || pathname === '/index.html') {
-    if (acceptHeader.includes('text/markdown') || acceptHeader.includes('text/x-markdown')) {
+  // 5. Root Homepage Content Negotiation (Markdown vs HTML)
+  if (pathname === '/' || pathname === '/index.html' || routeParam === 'markdown' || routeParam === 'index') {
+    if (routeParam === 'markdown' || acceptHeader.includes('text/markdown') || acceptHeader.includes('text/x-markdown')) {
       res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
       const llmsFull = fs.readFileSync(path.join(process.cwd(), 'llms-full.txt'), 'utf8');
       return res.status(200).send(llmsFull);
@@ -185,7 +194,7 @@ module.exports = (req, res) => {
   }
 
   // 6. Catch-All 404 Handler
-  if (acceptHeader.includes('application/json') || pathname.startsWith('/api/')) {
+  if (acceptHeader.includes('application/json') || pathname.startsWith('/api/') || pathname.startsWith('/v1/')) {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     return res.status(404).json({
       error: {

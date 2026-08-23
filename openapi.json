@@ -1,9 +1,11 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "DSB MUN 5.0 API & Machine Interface",
+    "title": "DSB MUN 5.0 API & Vercel Developer Resources",
     "description": "Official machine API for querying DSB MUN 5.0 Model United Nations conference data, committee agendas, schedule, dress code, and Model Context Protocol (MCP) server endpoints.",
     "version": "1.0.0",
+    "x-api-version": "v1",
+    "x-deprecation-policy": "DSB MUN 5.0 API follows Semantic Versioning 2.0.0. Major version changes are published under versioned URL paths (e.g. /v1/, /v2/). Deprecation notices are communicated 90 days in advance via the Sunset header (RFC 8594) and Deprecation header (RFC 9261).",
     "contact": {
       "name": "DSB MUN 5.0 Secretariat",
       "email": "dsbmun@gmail.com",
@@ -17,21 +19,23 @@
   "servers": [
     {
       "url": "https://dsbmun.vercel.app",
-      "description": "Production Server"
+      "description": "Production Vercel Deployment"
     }
   ],
   "paths": {
-    "/api/info": {
+    "/v1/info": {
       "get": {
         "summary": "Get Conference Overview",
         "description": "Returns core metadata about DSB MUN 5.0 including dates, venue, theme, and host school.",
-        "operationId": "getConferenceInfo",
+        "operationId": "getConferenceInfoV1",
         "responses": {
           "200": {
             "description": "Successful conference metadata response",
             "headers": {
-              "X-RateLimit-Limit": { "schema": { "type": "integer" }, "description": "Maximum requests per minute (100)" },
-              "X-RateLimit-Remaining": { "schema": { "type": "integer" }, "description": "Remaining requests in current quota window" }
+              "RateLimit-Limit": { "schema": { "type": "integer" }, "description": "Maximum requests per minute (100)" },
+              "RateLimit-Remaining": { "schema": { "type": "integer" }, "description": "Remaining requests in current quota window" },
+              "RateLimit-Reset": { "schema": { "type": "integer" }, "description": "Seconds until quota resets" },
+              "API-Version": { "schema": { "type": "string" }, "description": "Active API major version (v1)" }
             },
             "content": {
               "application/json": {
@@ -42,11 +46,11 @@
         }
       }
     },
-    "/api/committees": {
+    "/v1/committees": {
       "get": {
         "summary": "List All Simulation Committees",
         "description": "Returns list of all 9 committees with agendas, grade eligibility, and background guide status.",
-        "operationId": "listCommittees",
+        "operationId": "listCommitteesV1",
         "responses": {
           "200": {
             "description": "Array of 9 committees",
@@ -62,11 +66,11 @@
         }
       }
     },
-    "/api/schedule": {
+    "/v1/schedule": {
       "get": {
         "summary": "Get Conference Schedule",
         "description": "Returns hour-by-hour schedule for Day 1 (1 August 2026) and Day 2 (2 August 2026).",
-        "operationId": "getSchedule",
+        "operationId": "getScheduleV1",
         "responses": {
           "200": {
             "description": "Daily schedule breakdown",
@@ -79,11 +83,11 @@
         }
       }
     },
-    "/api/dress-code": {
+    "/v1/dress-code": {
       "get": {
         "summary": "Get Dress Code Requirements",
         "description": "Returns official delegate dress code guidelines (Day 1: Indian Traditional, Day 2: Western Formal).",
-        "operationId": "getDressCode",
+        "operationId": "getDressCodeV1",
         "responses": {
           "200": {
             "description": "Dress code requirements",
@@ -96,11 +100,11 @@
         }
       }
     },
-    "/api/contacts": {
+    "/v1/contacts": {
       "get": {
         "summary": "Get Secretariat Contact Details",
         "description": "Returns official email, Instagram handle, and leadership team contact information.",
-        "operationId": "getContactInfo",
+        "operationId": "getContactInfoV1",
         "responses": {
           "200": {
             "description": "Secretariat contact details",
@@ -113,11 +117,11 @@
         }
       }
     },
-    "/api/mcp": {
+    "/v1/mcp": {
       "get": {
         "summary": "Get MCP Server Manifest",
         "description": "Returns Model Context Protocol server capabilities, tools list, and version.",
-        "operationId": "getMcpManifest",
+        "operationId": "getMcpManifestV1",
         "responses": {
           "200": {
             "description": "MCP Server Manifest",
@@ -132,7 +136,7 @@
       "post": {
         "summary": "Execute MCP Tool or Handshake",
         "description": "Handles JSON-RPC 2.0 requests for initialize, tools/list, and tools/call.",
-        "operationId": "callMcpTool",
+        "operationId": "callMcpToolV1",
         "requestBody": {
           "required": true,
           "content": {
@@ -166,14 +170,17 @@
     "schemas": {
       "ConferenceInfo": {
         "type": "object",
-        "required": ["name", "theme", "dates", "location", "committeesCount", "website"],
+        "required": ["apiVersion", "name", "theme", "dates", "location", "committeesCount", "website", "documentation", "openApiSpec"],
         "properties": {
+          "apiVersion": { "type": "string", "example": "v1" },
           "name": { "type": "string", "example": "DSB MUN 5.0" },
           "theme": { "type": "string", "example": "Evolution for Revolution" },
           "dates": { "type": "string", "example": "1–2 August 2026" },
           "location": { "type": "string", "example": "DSB International Public School, Rishikesh, Uttarakhand" },
           "committeesCount": { "type": "integer", "example": 9 },
-          "website": { "type": "string", "format": "uri", "example": "https://dsbmun.vercel.app/" }
+          "website": { "type": "string", "format": "uri", "example": "https://dsbmun.vercel.app/" },
+          "documentation": { "type": "string", "format": "uri", "example": "https://dsbmun.vercel.app/docs" },
+          "openApiSpec": { "type": "string", "format": "uri", "example": "https://dsbmun.vercel.app/openapi.json" }
         }
       },
       "Committee": {
@@ -204,21 +211,27 @@
       },
       "ContactInfo": {
         "type": "object",
-        "required": ["email", "instagram", "principal", "secretaryGeneral", "directorGeneral", "webLead"],
+        "required": ["email", "instagram", "principal", "secretaryGeneral", "directorGeneral", "webLead", "venue"],
         "properties": {
           "email": { "type": "string", "format": "email", "example": "dsbmun@gmail.com" },
           "instagram": { "type": "string", "example": "@dsbmun" },
           "principal": { "type": "string", "example": "Mr. Shiv Sehgal" },
           "secretaryGeneral": { "type": "string", "example": "Ishika Dhamanda" },
           "directorGeneral": { "type": "string", "example": "Plaksha" },
-          "webLead": { "type": "string", "example": "Aradhy Jain" }
+          "webLead": { "type": "string", "example": "Aradhy Jain" },
+          "venue": { "type": "string", "example": "DSB International Public School, Rishikesh" }
         }
       },
       "McpManifest": {
         "type": "object",
+        "required": ["name", "title", "description", "version", "transport", "capabilities", "tools"],
         "properties": {
           "name": { "type": "string", "example": "dsb-mun-5-mcp" },
+          "title": { "type": "string", "example": "DSB MUN 5.0 Model Context Protocol Server" },
+          "description": { "type": "string", "example": "Exposes DSB MUN 5.0 conference data as tools" },
           "version": { "type": "string", "example": "1.0.0" },
+          "transport": { "type": "object" },
+          "capabilities": { "type": "object" },
           "tools": { "type": "array" }
         }
       },
@@ -234,6 +247,7 @@
       },
       "McpResponse": {
         "type": "object",
+        "required": ["jsonrpc", "result"],
         "properties": {
           "jsonrpc": { "type": "string", "example": "2.0" },
           "result": { "type": "object" },

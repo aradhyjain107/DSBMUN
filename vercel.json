@@ -18,16 +18,55 @@
   ],
   "rewrites": [
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "header",
+          "key": "accept",
+          "value": "(.*markdown.*)"
+        }
+      ],
+      "destination": "/api/router?route=markdown"
+    },
+    {
+      "source": "/v1/info",
+      "destination": "/api/router?route=info"
+    },
+    {
+      "source": "/v1/committees",
+      "destination": "/api/router?route=committees"
+    },
+    {
+      "source": "/v1/schedule",
+      "destination": "/api/router?route=schedule"
+    },
+    {
+      "source": "/v1/dress-code",
+      "destination": "/api/router?route=dress-code"
+    },
+    {
+      "source": "/v1/contacts",
+      "destination": "/api/router?route=contacts"
+    },
+    {
+      "source": "/v1/openapi.json",
+      "destination": "/api/router?route=openapi"
+    },
+    {
+      "source": "/v1/mcp",
+      "destination": "/api/router?route=mcp"
+    },
+    {
       "source": "/openapi.json",
-      "destination": "/api/router"
+      "destination": "/api/router?route=openapi"
     },
     {
       "source": "/openapi.yaml",
-      "destination": "/api/router"
+      "destination": "/api/router?route=openapi"
     },
     {
       "source": "/api/openapi.json",
-      "destination": "/api/router"
+      "destination": "/api/router?route=openapi"
     },
     {
       "source": "/docs",
@@ -39,27 +78,27 @@
     },
     {
       "source": "/.well-known/mcp",
-      "destination": "/api/router"
+      "destination": "/api/router?route=mcp"
     },
     {
       "source": "/.well-known/mcp.json",
-      "destination": "/api/router"
+      "destination": "/api/router?route=mcp"
     },
     {
       "source": "/llms.txt",
-      "destination": "/api/router"
+      "destination": "/api/router?route=llms"
     },
     {
       "source": "/llms-full.txt",
-      "destination": "/api/router"
+      "destination": "/api/router?route=llms-full"
     },
     {
       "source": "/sitemap.xml",
-      "destination": "/api/router"
+      "destination": "/api/router?route=sitemap"
     },
     {
       "source": "/robots.txt",
-      "destination": "/api/router"
+      "destination": "/api/router?route=robots"
     },
     {
       "source": "/about",
@@ -78,7 +117,7 @@
       "destination": "/api/router"
     },
     {
-      "source": "/",
+      "source": "/v1/:endpoint*",
       "destination": "/api/router"
     },
     {
