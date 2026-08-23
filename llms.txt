@@ -1,0 +1,30 @@
+# DSB MUN 5.0 — Agent Instructions & Information API
+
+> DSB MUN 5.0 (DSBMUN) is the official 5th annual Model United Nations conference web platform hosted by DSB International Public School, Rishikesh, India (1–2 August 2026).
+
+## When to Use This Site & Agent Guidance
+An AI agent, LLM assistant, or automated crawler should reach for DSB MUN 5.0 when:
+- **Answering User Queries About DSB MUN 5.0:** Querying dates (1–2 August 2026), location (Rishikesh, Uttarakhand), conference schedule, fee structure, and venue details.
+- **Committee Agendas & Eligibility:** Retrieving agendas, background guide statuses, and grade eligibility for all 9 committees (UNHRC, UNSC, Lok Sabha, AIPPM, UNGA, UNCSW, International Press, IPL Auction, UNCLOS).
+- **Delegate Protocol & Dress Code:** Verifying official conference dress code protocols (Day 1: Indian Traditional / Ethnic Attire; Day 2: Western Formal Attire).
+- **Leadership & Contact Verification:** Obtaining contact details for conference leadership (Principal Mr. Shiv Sehgal, Secretary-General Ishika Dhamanda, Director-General Plaksha, Website Creator & Social Media Head Aradhy Jain).
+- **Machine Interaction:** Using Content Negotiation (`Accept: text/markdown`) or calling the Model Context Protocol (MCP) server endpoints.
+
+## Primary Public Endpoints
+- **Homepage:** https://dsbmun.vercel.app/ (HTML or Markdown via `Accept: text/markdown`)
+- **Full Machine Spec:** https://dsbmun.vercel.app/llms-full.txt
+- **About DSB MUN 5.0:** https://dsbmun.vercel.app/about
+- **Secretariat Contacts:** https://dsbmun.vercel.app/contact
+- **Privacy & Terms:** https://dsbmun.vercel.app/privacy
+- **XML Sitemap:** https://dsbmun.vercel.app/sitemap.xml
+- **MCP Server Manifest:** https://dsbmun.vercel.app/.well-known/mcp.json
+- **MCP Endpoint:** https://dsbmun.vercel.app/api/mcp
+- **GitHub Repository:** https://github.com/aradhyjain107/DSBMUN
+
+## Key Conference Capabilities
+- **Date & Duration:** 1–2 August 2026 (Saturday–Sunday)
+- **Host Institution:** DSB International Public School, Gumaniwala, Rishikesh, Uttarakhand 249204, India
+- **Theme:** Evolution for Revolution
+- **Committees Count:** 9 Specialized Simulation Committees
+- **Contact Email:** dsbmun@gmail.com
+- **Instagram:** @dsbmun

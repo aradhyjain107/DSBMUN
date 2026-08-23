@@ -1,0 +1,43 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schema/mcp.json",
+  "name": "dsb-mun-5-mcp",
+  "title": "DSB MUN 5.0 Model Context Protocol Server",
+  "description": "Exposes DSB MUN 5.0 conference data, committee agendas, schedule, and delegate rules as tools for AI agents.",
+  "version": "1.0.0",
+  "homepage": "https://dsbmun.vercel.app/",
+  "publisher": {
+    "name": "DSB International Public School",
+    "url": "https://dsbmun.vercel.app/"
+  },
+  "transport": {
+    "type": "http",
+    "endpoint": "https://dsbmun.vercel.app/api/mcp"
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": true,
+    "prompts": true
+  },
+  "tools": [
+    {
+      "name": "get_conference_info",
+      "description": "Returns basic details about DSB MUN 5.0 (dates, venue, theme, stats)"
+    },
+    {
+      "name": "list_committees",
+      "description": "Lists all 9 committees (UNHRC, UNSC, Lok Sabha, AIPPM, UNGA, UNCSW, IP, IPL Auction, UNCLOS) with agendas and eligibility"
+    },
+    {
+      "name": "get_schedule",
+      "description": "Returns the hour-by-hour schedule for Day 1 (1 Aug) and Day 2 (2 Aug)"
+    },
+    {
+      "name": "get_dress_code",
+      "description": "Returns delegate dress code protocol (Day 1: Indian Traditional, Day 2: Western Formal)"
+    },
+    {
+      "name": "get_contact_info",
+      "description": "Returns contact details for Secretariat and leadership"
+    }
+  ]
+}

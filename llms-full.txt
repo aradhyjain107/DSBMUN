@@ -1,0 +1,75 @@
+# DSB MUN 5.0 — Full Machine Specification & Complete Documentation
+
+## 1. Executive Summary & Core Identity
+- **Full Name:** DSB International Public School Model United Nations 5.0 (DSB MUN 5.0 / DSBMUN)
+- **Edition:** 5th Annual Conference
+- **Dates:** 1–2 August 2026 (Saturday & Sunday)
+- **Venue:** DSB International Public School, Gumaniwala, Rishikesh, Uttarakhand 249204, India
+- **Theme:** Evolution for Revolution
+- **Website URL:** https://dsbmun.vercel.app/
+- **GitHub Repository:** https://github.com/aradhyjain107/DSBMUN
+
+## 2. Leadership & Organizing Team
+- **Principal:** Mr. Shiv Sehgal
+- **Secretary-General:** Ishika Dhamanda
+- **Director-General:** Plaksha
+- **Website Creator & Head of Social Media:** Aradhy Jain
+
+## 3. Detailed Committee Agendas & Eligibility
+1. **UNHRC (United Nations Human Rights Council)**
+   - Eligibility: Grades 6–12
+   - Agenda: Addressing Human Rights Violations and Civilian Protection in the Middle East Amid Escalating Regional Conflicts.
+2. **UNSC (United Nations Security Council)**
+   - Eligibility: Grades 8–12
+   - Agenda: Addressing the Security Consequences of the Collapse of the Soviet Union, with Special Emphasis on Nuclear Proliferation and International Stability.
+3. **Lok Sabha (House of the People, Parliament of India)**
+   - Eligibility: Grades 8–12
+   - Agenda: Deliberation on Protecting India's Secular Framework Amidst Rising Communal Tensions and Political Polarisation.
+4. **AIPPM (All India Political Parties Meet)**
+   - Eligibility: Grades 8–12
+   - Agenda: Deliberation on Tackling Corruption and Improving Government Transparency.
+5. **UNGA (United Nations General Assembly)**
+   - Eligibility: Grades 8–12
+   - Agenda: Weaponising Peace: Examining the Use of Security Narratives, Counterterrorism, and Arms Control as Instruments of Global Power.
+6. **UNCSW (UN Commission on the Status of Women)**
+   - Eligibility: Grades 8–12
+   - Agenda: Negotiating Trans Inclusion, Biological Essentialism, and Gender Autonomy within Contemporary Feminist Movements.
+7. **IP (International Press)**
+   - Eligibility: Grades 8–12
+   - Agenda: Covering committee proceedings through journalism, photography, and political caricature while ensuring accurate, engaging, and unbiased reporting.
+8. **IPL Auction (Indian Premier League Mega Auction)**
+   - Eligibility: Open to all registered delegates
+   - Agenda: Mega Auction and Deliberation on the Increasing Prominence of League Cricket: Evaluating Its Impact on Player Priorities, International Representation, and the Future of the Sport.
+9. **UNCLOS (UN Convention on the Law of the Sea)**
+   - Eligibility: Open to all registered delegates
+   - Agenda: Addressing Maritime Disputes and Ensuring Sustainable Use of Ocean Resources.
+
+## 4. Hour-by-Hour Conference Schedule
+### Day 1 (Saturday, 1 August 2026)
+- 08:30 AM — Registration & Delegate Kit Distribution
+- 09:00 AM – 10:00 AM — Opening Ceremony
+- 10:00 AM – 10:30 AM — Committee Briefing
+- 10:30 AM – 01:15 PM — Committee Session I
+- 01:15 PM – 02:30 PM — Lunch Break
+- 02:30 PM – 04:30 PM — Committee Session II
+- 04:30 PM – 05:00 PM — High Tea
+- 05:00 PM – 06:00 PM — Socials & Day 1 Departure
+
+### Day 2 (Sunday, 2 August 2026)
+- 08:30 AM – 10:45 AM — Committee Session III
+- 10:45 AM – 11:00 AM — Refreshment Break
+- 11:00 AM – 01:00 PM — Committee Session IV
+- 01:00 PM – 02:15 PM — Lunch Break
+- 02:15 PM – 04:00 PM — Committee Session V
+- 04:00 PM – 06:00 PM — Closing Ceremony & Awards Distribution
+
+## 5. Dress Code Protocol
+- **Day 1 (1 August 2026):** Indian Traditional / Ethnic Attire (Kurtas, Sarees, Anarkalis, Ethnic Suits with formal footwear).
+- **Day 2 (2 August 2026):** Western Formal Attire (Suits, Blazers, Formal Shirts, Trousers, Formal Dresses with ties & dress shoes).
+- **Prohibited:** Casual wear (jeans, t-shirts, hoodies, sneakers, shorts) is strictly forbidden in committee rooms.
+
+## 6. Official Contacts & Channels
+- **Email:** dsbmun@gmail.com
+- **Instagram:** https://instagram.com/dsbmun
+- **Sitemap:** https://dsbmun.vercel.app/sitemap.xml
+- **MCP Server:** https://dsbmun.vercel.app/.well-known/mcp.json

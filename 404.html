@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 Page Not Found — DSB MUN 5.0</title>
+<meta name="description" content="The requested page could not be found on DSB MUN 5.0. Navigation sitemap, agent recovery links, and documentation links.">
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<style>
+  :root { --paper: #F2EBDC; --navy: #0E2A8A; --ink: #0B0B0F; --red: #C42018; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--paper); color: var(--ink); margin: 0; padding: 3rem 1rem; line-height: 1.6; text-align: center; }
+  .container { max-width: 680px; margin: 0 auto; background: #FFF; padding: 3rem 2rem; border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--red); text-align: left; }
+  h1 { font-size: 2.2rem; color: var(--red); margin-top: 0; border-bottom: 3px solid var(--ink); padding-bottom: 0.5rem; }
+  h2 { font-size: 1.3rem; color: var(--navy); margin-top: 1.5rem; }
+  ul { padding-left: 1.2rem; }
+  a { color: var(--navy); font-weight: bold; text-decoration: underline; }
+  .code-block { background: var(--paper); border: 1px solid var(--ink); padding: 1rem; font-family: monospace; font-size: 0.85rem; margin-top: 1rem; overflow-x: auto; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>404 — Page Not Found</h1>
+  <p>The requested URL path does not exist on <strong>DSB MUN 5.0</strong>.</p>
+  
+  <h2>Navigation Links &amp; Sitemap</h2>
+  <p>Please use the links below to navigate back to valid sections of the platform:</p>
+  <ul>
+    <li><a href="/">DSB MUN 5.0 Homepage &amp; Main Platform</a></li>
+    <li><a href="/about">About DSB MUN 5.0 &amp; DSB International Public School</a></li>
+    <li><a href="/contact">Contact Secretariat &amp; Venue Details</a></li>
+    <li><a href="/privacy">Privacy Policy &amp; Delegate Terms</a></li>
+    <li><a href="/sitemap.xml">XML Sitemap (/sitemap.xml)</a></li>
+  </ul>
+  
+  <h2>AI Agent Recovery Guidance</h2>
+  <p>If you are an automated AI agent, crawler, or LLM assistant looking for machine-readable information, use the following standardized endpoints:</p>
+  <ul>
+    <li><strong>llms.txt:</strong> <a href="/llms.txt">https://dsbmun.vercel.app/llms.txt</a></li>
+    <li><strong>llms-full.txt:</strong> <a href="/llms-full.txt">https://dsbmun.vercel.app/llms-full.txt</a></li>
+    <li><strong>MCP Server Manifest:</strong> <a href="/.well-known/mcp.json">https://dsbmun.vercel.app/.well-known/mcp.json</a></li>
+    <li><strong>Documentation Index:</strong> <a href="/docs">https://dsbmun.vercel.app/docs</a></li>
+  </ul>
+  
+  <div class="code-block">
+    # Markdown Representation for AI Agents<br>
+    # HTTP Status: 404 Not Found<br>
+    # Recovery: Query /llms.txt or /.well-known/mcp.json for available endpoints.
+  </div>
+</div>
+</body>
+</html>
