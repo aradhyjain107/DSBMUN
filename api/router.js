@@ -8,7 +8,6 @@ module.exports = (req, res) => {
   const acceptHeader = String(req.headers['accept'] || '').toLowerCase();
   const rawPath = parsedFromReq.pathname.toLowerCase();
   const xForwardedUri = String(req.headers['x-forwarded-uri'] || '').toLowerCase();
-  const xMatchedPath = String(req.headers['x-matched-path'] || '').toLowerCase();
   const effectivePath = (xForwardedUri || rawPath).toLowerCase();
 
   // Standard CORS, RateLimit, Versioning, Sunset, and Deprecation headers
@@ -103,7 +102,7 @@ module.exports = (req, res) => {
     }
   }
 
-  // 3. MCP Server Manifest & Live Protocol Handshake
+  // 3. MCP Server Manifest & Complete JSON-RPC 2.0 Live Protocol Handshake
   if (routeParam === 'mcp' || effectivePath === '/.well-known/mcp' || effectivePath === '/.well-known/mcp.json' || effectivePath === '/api/mcp' || effectivePath === '/v1/mcp') {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
 
@@ -114,7 +113,7 @@ module.exports = (req, res) => {
       version: "1.0.0",
       protocolVersion: "2024-11-05",
       transport: { type: "http", endpoint: "https://dsbmun.vercel.app/api/mcp" },
-      capabilities: { tools: {}, resources: {} },
+      capabilities: { tools: {}, resources: {}, prompts: {} },
       tools: [
         { name: "get_conference_info", description: "Returns basic details about DSB MUN 5.0", inputSchema: { type: "object", properties: {}, required: [] } },
         { name: "list_committees", description: "Lists all 9 committees with agendas and eligibility", inputSchema: { type: "object", properties: {}, required: [] } },
@@ -129,20 +128,36 @@ module.exports = (req, res) => {
     }
 
     if (req.method === 'POST') {
-      const body = req.body || {};
+      let body = req.body || {};
+      if (typeof body === 'string') {
+        try { body = JSON.parse(body); } catch (e) { body = {}; }
+      }
       const method = body.method;
       const params = body.params || {};
+      const msgId = body.id !== undefined ? body.id : 1;
 
       if (method === 'initialize') {
         return res.status(200).json({
           jsonrpc: "2.0",
-          id: body.id || 1,
+          id: msgId,
           result: { protocolVersion: "2024-11-05", capabilities: manifest.capabilities, serverInfo: { name: manifest.name, version: manifest.version } }
         });
       }
 
+      if (method === 'ping') {
+        return res.status(200).json({ jsonrpc: "2.0", id: msgId, result: {} });
+      }
+
       if (method === 'tools/list') {
-        return res.status(200).json({ jsonrpc: "2.0", id: body.id || 1, result: { tools: manifest.tools } });
+        return res.status(200).json({ jsonrpc: "2.0", id: msgId, result: { tools: manifest.tools } });
+      }
+
+      if (method === 'resources/list') {
+        return res.status(200).json({ jsonrpc: "2.0", id: msgId, result: { resources: [] } });
+      }
+
+      if (method === 'prompts/list') {
+        return res.status(200).json({ jsonrpc: "2.0", id: msgId, result: { prompts: [] } });
       }
 
       if (method === 'tools/call') {
@@ -155,10 +170,12 @@ module.exports = (req, res) => {
         else if (toolName === 'get_contact_info') data = { email: "dsbmun@gmail.com", instagram: "@dsbmun" };
 
         if (data) {
-          return res.status(200).json({ jsonrpc: "2.0", id: body.id || 1, result: { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] } });
+          return res.status(200).json({ jsonrpc: "2.0", id: msgId, result: { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] } });
         }
+        return res.status(200).json({ jsonrpc: "2.0", id: msgId, error: { code: -32601, message: `Tool '${toolName}' not found` } });
       }
-      return res.status(200).json(manifest);
+
+      return res.status(200).json({ jsonrpc: "2.0", id: msgId, result: manifest });
     }
   }
 
@@ -205,7 +222,22 @@ module.exports = (req, res) => {
     return res.status(200).send(html);
   }
 
-  // 6. Dynamic Agent-Friendly 404 Fallback (Strict HTTP 404 for all nonexistent paths)
+  // 6. Dynamic Error Responses (Structured JSON for APIs / Agents; HTML for Browsers)
+  const isApiRequest = effectivePath.startsWith('/api/') || effectivePath.startsWith('/v1/') || acceptHeader.includes('application/json') || acceptHeader.includes('application/problem+json');
+  
+  if (isApiRequest) {
+    res.setHeader('Content-Type', 'application/problem+json; charset=utf-8');
+    return res.status(404).json({
+      type: "https://dsbmun.vercel.app/docs#errors",
+      title: "Resource Not Found",
+      status: 404,
+      detail: `The requested endpoint '${effectivePath}' does not exist on https://dsbmun.vercel.app.`,
+      code: "NOT_FOUND",
+      message: "The requested API endpoint was not found.",
+      resolutionHint: "Check https://dsbmun.vercel.app/v1/openapi.json or https://dsbmun.vercel.app/docs for available endpoints."
+    });
+  }
+
   if (acceptHeader.includes('text/markdown')) {
     res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
     return res.status(404).send('# 404 Not Found\n\nThe requested resource does not exist on https://dsbmun.vercel.app/.\n\n## Available Sitemap Links\n- [Homepage](https://dsbmun.vercel.app/)\n- [API Docs](https://dsbmun.vercel.app/docs)\n- [OpenAPI Spec](https://dsbmun.vercel.app/openapi.json)\n- [Agent Instructions](https://dsbmun.vercel.app/llms.txt)\n- [XML Sitemap](https://dsbmun.vercel.app/sitemap.xml)\n');
