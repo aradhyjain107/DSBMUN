@@ -121,6 +121,10 @@
       "destination": "/api/router"
     },
     {
+      "source": "/",
+      "destination": "/api/router?route=home"
+    },
+    {
       "source": "/(.*)",
       "destination": "/api/router"
     }
