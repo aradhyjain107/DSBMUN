@@ -184,9 +184,9 @@ module.exports = (req, res) => {
     return res.status(200).send(content);
   }
 
-  // 5. Content Negotiation for Root /
-  if (fullCheck.includes('home') || rawUrl === '/' || rawUrl === '') {
-    if (acceptHeader.includes('text/markdown')) {
+  // 5. Content Negotiation for Root / and Home
+  if (queryRoute === 'home' || queryRoute === 'markdown' || fullCheck.includes('route=home') || fullCheck.includes('route=markdown') || rawUrl === '/' || rawUrl === '') {
+    if (acceptHeader.includes('text/markdown') || queryRoute === 'markdown' || fullCheck.includes('route=markdown')) {
       res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
       const md = fs.readFileSync(path.join(process.cwd(), 'llms.txt'), 'utf8');
       return res.status(200).send(md);
