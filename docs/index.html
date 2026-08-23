@@ -3,8 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Developer API Documentation — DSB MUN 5.0 Vercel Developer Resources</title>
-<meta name="description" content="Official Developer API Documentation, OpenAPI 3.1 Spec, Vercel Serverless Functions, Model Context Protocol (MCP) Server, and Deprecation Policy for DSB MUN 5.0.">
+<title>DSB MUN 5.0 Vercel Developer Resources — Official API Docs, OpenAPI & MCP Server</title>
+<meta name="description" content="Official Vercel Developer Resources, OpenAPI 3.1 Spec, Authentication Docs, Webhooks, Model Context Protocol (MCP) Server, and RFC 9457 Problem Details Error Models for DSB MUN 5.0.">
+<meta name="application-name" content="DSB MUN 5.0">
+<meta name="keywords" content="DSB MUN 5.0, DSBMUN, Vercel Developer Resources, OpenAPI 3.1, Model Context Protocol, MCP server, Model United Nations">
 <link rel="canonical" href="https://dsbmun.vercel.app/docs">
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <style>
@@ -29,16 +31,48 @@
     <a href="/about">About</a>
     <a href="/contact">Contact</a>
     <a href="/v1/openapi.json" target="_blank">OpenAPI 3.1 Spec (JSON)</a>
+    <a href="/.well-known/mcp" target="_blank">MCP Server Manifest</a>
     <a href="/llms.txt">Agent Spec (llms.txt)</a>
   </div>
 
-  <h1>DSB MUN 5.0 Vercel Developer API Documentation</h1>
-  <p>Welcome to the official developer and machine documentation for <strong>DSB MUN 5.0</strong>. This interface provides REST endpoints, OpenAPI 3.1 specifications, Model Context Protocol (MCP) server endpoints, Vercel serverless integration, and structured content negotiation for AI agents.</p>
+  <h1>DSB MUN 5.0 Vercel Developer Resources &amp; API Docs</h1>
+  <p>Welcome to the official developer and machine documentation for <strong>DSB MUN 5.0</strong>. This interface provides REST endpoints, OpenAPI 3.1 specifications, Model Context Protocol (MCP) server endpoints, Vercel serverless integration, authentication docs, and structured content negotiation for AI agents.</p>
 
-  <h2>Authentication, Rate Limits &amp; Versioning</h2>
-  <p><strong>Authentication:</strong> All GET endpoints are public and require <em>no API key or authentication</em>.</p>
-  <p><strong>API Versioning:</strong> All endpoints are versioned under the <code>/v1/</code> path (e.g. <code>https://dsbmun.vercel.app/v1/info</code>). Unversioned aliases (<code>/api/*</code>) point to the current active major version (v1).</p>
+  <h2 id="authentication">Authentication &amp; Auth Docs</h2>
+  <p><strong>Open Public Access:</strong> All read and query endpoints are public and require <em>no API key or credentials</em>.</p>
+  <p><strong>API Versioning:</strong> All endpoints are versioned under the <code>/v1/</code> path (e.g. <code>https://dsbmun.vercel.app/v1/info</code>). Unversioned aliases (<code>/api/*</code>) route to the current active major version (v1).</p>
   <p><strong>Rate Limits:</strong> Standard rate limits are set to <strong>100 requests per minute</strong>. Headers returned with responses include <code>RateLimit-Limit</code>, <code>RateLimit-Remaining</code>, <code>RateLimit-Reset</code>, <code>X-RateLimit-Limit</code>, <code>X-RateLimit-Remaining</code>, and <code>X-RateLimit-Reset</code>.</p>
+
+  <h2 id="openapi">OpenAPI 3.1 Specification</h2>
+  <p>The machine-readable OpenAPI 3.1.0 specification is available at:</p>
+  <ul>
+    <li><strong>OpenAPI JSON:</strong> <a href="/v1/openapi.json">https://dsbmun.vercel.app/v1/openapi.json</a> (or <a href="/openapi.json">/openapi.json</a>)</li>
+    <li><strong>Compatibility:</strong> Fully typed request and response schemas (7/7 operations) compatible with Vercel AI SDK, OpenAI function calling, and LangChain.</li>
+  </ul>
+
+  <h2 id="mcp">Model Context Protocol (MCP) Server</h2>
+  <p>For AI assistants (Claude, Cursor, ChatGPT), DSB MUN 5.0 provides a first-party HTTP MCP server adhering to the <strong>2024-11-05</strong> protocol specification.</p>
+  <ul>
+    <li><strong>Live Protocol Handshake:</strong> <a href="/.well-known/mcp">https://dsbmun.vercel.app/.well-known/mcp</a></li>
+    <li><strong>Physical Manifest:</strong> <a href="/.well-known/mcp.json">https://dsbmun.vercel.app/.well-known/mcp.json</a></li>
+    <li><strong>Streamable HTTP Transport:</strong> <code>https://dsbmun.vercel.app/api/mcp</code></li>
+    <li><strong>Tools Exposed:</strong> <code>get_conference_info</code>, <code>list_committees</code>, <code>get_schedule</code>, <code>get_dress_code</code>, <code>get_contact_info</code>.</li>
+  </ul>
+  <pre>curl -X POST https://dsbmun.vercel.app/api/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"list_committees"},"id":1}'</pre>
+
+  <h2 id="webhooks">Webhooks &amp; Event Streaming</h2>
+  <p>DSB MUN 5.0 supports streaming JSON-RPC tool executions via the Streamable HTTP transport at <code>/api/mcp</code>. Conference announcements and updates are pushed through semantic markdown feeds at <code>/llms.txt</code> and <code>/llms-full.txt</code>.</p>
+
+  <h2 id="errors">REST Typed Error Models (RFC 9457 Problem Details)</h2>
+  <p>All 4xx and 5xx responses return structured RFC 9457 <code>application/problem+json</code> and <code>application/json</code> error models with machine-readable error codes and resolution hints:</p>
+  <pre>{
+  "code": "NOT_FOUND",
+  "message": "The requested resource was not found.",
+  "resolutionHint": "Check /v1/openapi.json or /docs for available endpoints.",
+  "statusCode": 404
+}</pre>
 
   <h2 id="deprecation">API Deprecation &amp; Sunset Policy</h2>
   <p>DSB MUN 5.0 follows <strong>Semantic Versioning 2.0.0</strong> for all machine interfaces:</p>
@@ -46,14 +80,6 @@
     <li><strong>Deprecation Signaling:</strong> Deprecated APIs return standard HTTP response headers: <code>Deprecation: true</code>, <code>Sunset: &lt;date&gt;</code> (per RFC 8594), and a <code>Link: &lt;url&gt;; rel="deprecation"</code> header.</li>
     <li><strong>Deprecation Timeline:</strong> Any major version deprecation is announced at least <strong>90 days in advance</strong> before sunsetting.</li>
     <li><strong>Current Active Version:</strong> <code>v1</code> (Active, <code>Deprecation: false</code>).</li>
-  </ul>
-
-  <h2>Machine Specifications &amp; Vercel Resources</h2>
-  <ul>
-    <li><strong>OpenAPI 3.1 Spec:</strong> <a href="/v1/openapi.json">https://dsbmun.vercel.app/v1/openapi.json</a></li>
-    <li><strong>Model Context Protocol Manifest:</strong> <a href="/.well-known/mcp.json">https://dsbmun.vercel.app/.well-known/mcp.json</a></li>
-    <li><strong>Agent Instruction Spec:</strong> <a href="/llms.txt">https://dsbmun.vercel.app/llms.txt</a></li>
-    <li><strong>Full Machine Spec:</strong> <a href="/llms-full.txt">https://dsbmun.vercel.app/llms-full.txt</a></li>
   </ul>
 
   <h2>REST API Endpoints</h2>
@@ -87,12 +113,6 @@
     <p>Returns Secretariat email, Instagram handle, and host school details.</p>
     <pre>curl -s https://dsbmun.vercel.app/v1/contacts</pre>
   </div>
-
-  <h2>Model Context Protocol (MCP) Server</h2>
-  <p>For AI assistants like Claude, ChatGPT, and Cursor, DSB MUN 5.0 exposes a native HTTP MCP server at <code>https://dsbmun.vercel.app/api/mcp</code> with tools: <code>get_conference_info</code>, <code>list_committees</code>, <code>get_schedule</code>, <code>get_dress_code</code>, and <code>get_contact_info</code>.</p>
-  <pre>curl -X POST https://dsbmun.vercel.app/api/mcp \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"list_committees"},"id":1}'</pre>
 
   <h2>Content Negotiation (acceptmarkdown.com)</h2>
   <p>To receive raw Markdown representations of the site, include <code>Accept: text/markdown</code> header in HTTP requests:</p>
