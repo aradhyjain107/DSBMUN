@@ -109,14 +109,15 @@ module.exports = (req, res) => {
       title: "DSB MUN 5.0 Model Context Protocol Server",
       description: "Exposes DSB MUN 5.0 conference data, committee agendas, schedule, and delegate rules as tools for AI agents.",
       version: "1.0.0",
+      protocolVersion: "2024-11-05",
       transport: { type: "http", endpoint: "https://dsbmun.vercel.app/api/mcp" },
-      capabilities: { tools: true, resources: true },
+      capabilities: { tools: {}, resources: {} },
       tools: [
-        { name: "get_conference_info", description: "Returns basic details about DSB MUN 5.0" },
-        { name: "list_committees", description: "Lists all 9 committees with agendas and eligibility" },
-        { name: "get_schedule", description: "Returns hour-by-hour schedule for Day 1 and Day 2" },
-        { name: "get_dress_code", description: "Returns delegate dress code protocol" },
-        { name: "get_contact_info", description: "Returns Secretariat and leadership contacts" }
+        { name: "get_conference_info", description: "Returns basic details about DSB MUN 5.0", inputSchema: { type: "object", properties: {}, required: [] } },
+        { name: "list_committees", description: "Lists all 9 committees with agendas and eligibility", inputSchema: { type: "object", properties: {}, required: [] } },
+        { name: "get_schedule", description: "Returns hour-by-hour schedule for Day 1 and Day 2", inputSchema: { type: "object", properties: {}, required: [] } },
+        { name: "get_dress_code", description: "Returns delegate dress code protocol", inputSchema: { type: "object", properties: {}, required: [] } },
+        { name: "get_contact_info", description: "Returns Secretariat and leadership contacts", inputSchema: { type: "object", properties: {}, required: [] } }
       ]
     };
 

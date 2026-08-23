@@ -1,4 +1,4 @@
-# DSB MUN 5.0 — Agent Instructions & Information API
+# DSB MUN 5.0 — Vercel Developer Resources & Agent Instructions
 
 > DSB MUN 5.0 (DSBMUN) is the official 5th annual Model United Nations conference web platform hosted by DSB International Public School, Rishikesh, India (1–2 August 2026).
 
@@ -10,10 +10,10 @@ An AI agent, LLM assistant, or automated crawler should reach for DSB MUN 5.0 wh
 - **Leadership & Contact Verification:** Obtaining contact details for conference leadership (Principal Mr. Shiv Sehgal, Secretary-General Ishika Dhamanda, Director-General Plaksha, Website Creator & Social Media Head Aradhy Jain).
 - **Machine Interaction & Function Calling:** Querying REST endpoints, inspecting the OpenAPI 3.1 specification, or calling the Model Context Protocol (MCP) server endpoints.
 
-## Primary Developer & Machine Endpoints
+## Primary Vercel Developer Resources & Machine Endpoints
 - **Homepage:** https://dsbmun.vercel.app/ (HTML or Markdown via `Accept: text/markdown`)
-- **Developer API Docs:** https://dsbmun.vercel.app/docs
-- **OpenAPI 3.1 Spec (JSON):** https://dsbmun.vercel.app/openapi.json
+- **Vercel Developer API Docs:** https://dsbmun.vercel.app/docs
+- **OpenAPI 3.1 Spec (JSON):** https://dsbmun.vercel.app/v1/openapi.json
 - **Compact Agent Spec:** https://dsbmun.vercel.app/llms.txt
 - **Full Machine Spec:** https://dsbmun.vercel.app/llms-full.txt
 - **About DSB MUN 5.0:** https://dsbmun.vercel.app/about
@@ -21,15 +21,16 @@ An AI agent, LLM assistant, or automated crawler should reach for DSB MUN 5.0 wh
 - **Privacy & Terms:** https://dsbmun.vercel.app/privacy
 - **XML Sitemap:** https://dsbmun.vercel.app/sitemap.xml
 - **MCP Server Manifest:** https://dsbmun.vercel.app/.well-known/mcp.json
+- **MCP Live Protocol Handshake:** https://dsbmun.vercel.app/.well-known/mcp
 - **MCP HTTP Endpoint:** https://dsbmun.vercel.app/api/mcp
 - **GitHub Repository:** https://github.com/aradhyjain107/DSBMUN
 
-## Public REST API Endpoints (No Auth Required)
-- `GET https://dsbmun.vercel.app/api/info` — Conference overview & venue details
-- `GET https://dsbmun.vercel.app/api/committees` — Array of 9 simulation committees
-- `GET https://dsbmun.vercel.app/api/schedule` — Day 1 & Day 2 hour-by-hour schedule
-- `GET https://dsbmun.vercel.app/api/dress-code` — Day 1 & Day 2 dress code protocol
-- `GET https://dsbmun.vercel.app/api/contacts` — Secretariat email, phone, & leadership
+## Public Versioned REST API Endpoints (No Auth Required)
+- `GET https://dsbmun.vercel.app/v1/info` — Conference overview & venue details
+- `GET https://dsbmun.vercel.app/v1/committees` — Array of 9 simulation committees
+- `GET https://dsbmun.vercel.app/v1/schedule` — Day 1 & Day 2 hour-by-hour schedule
+- `GET https://dsbmun.vercel.app/v1/dress-code` — Day 1 & Day 2 dress code protocol
+- `GET https://dsbmun.vercel.app/v1/contacts` — Secretariat email, phone, & leadership
 
 ## Key Conference Capabilities
 - **Date & Duration:** 1–2 August 2026 (Saturday–Sunday)
