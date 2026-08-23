@@ -196,14 +196,12 @@ module.exports = (req, res) => {
     return res.status(200).send(html);
   }
 
-  // 6. Markdown content negotiation on any endpoint
+  // 6. Dynamic Agent-Friendly 404 Fallback (Guaranteed HTTP 404 for all nonexistent paths)
   if (acceptHeader.includes('text/markdown')) {
     res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
-    const md = fs.readFileSync(path.join(process.cwd(), 'llms.txt'), 'utf8');
-    return res.status(200).send(md);
+    return res.status(404).send('# 404 Not Found\n\nThe requested resource does not exist on https://dsbmun.vercel.app/.\n\n## Available Sitemap Links\n- [Homepage](https://dsbmun.vercel.app/)\n- [API Docs](https://dsbmun.vercel.app/docs)\n- [OpenAPI Spec](https://dsbmun.vercel.app/openapi.json)\n- [Agent Instructions](https://dsbmun.vercel.app/llms.txt)\n- [XML Sitemap](https://dsbmun.vercel.app/sitemap.xml)\n');
   }
 
-  // 7. Dynamic Agent-Friendly 404 Fallback
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   try {
     const notFoundHtml = fs.readFileSync(path.join(process.cwd(), '404.html'), 'utf8');
