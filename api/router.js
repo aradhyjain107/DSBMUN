@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = (req, res) => {
-  const url = req.url || '';
+  const url = req.headers['x-forwarded-uri'] || req.headers['x-matched-path'] || req.url || '';
   const parsedUrl = new URL(url, `https://${req.headers.host || 'dsbmun.vercel.app'}`);
   const pathname = parsedUrl.pathname.toLowerCase();
   const acceptHeader = (req.headers['accept'] || '').toLowerCase();
